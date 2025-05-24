@@ -43,7 +43,6 @@
 	},
 	"dependencies": {
 		"@fontsource-variable/lora": "^5.2.5",
-		"@inlang/paraglide-js": "^2.0.0",
 		"@lucide/svelte": "^0.511.0",
 		"@notion-render/client": "^0.0.2",
 		"@notionhq/client": "^3.1.1",
