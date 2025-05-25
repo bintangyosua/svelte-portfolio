@@ -14,12 +14,11 @@ export const load = (async () => {
 
 		const pagesWithBlocks = await Promise.all(
 			pages.map(async (page, i) => {
-				if (i >= 2) {
+				if (i >= 4) {
 					return;
 				}
 
 				const blocks = await notionService.getBlocks(page.id);
-
 				const images: string[] = [];
 
 				blocks.forEach((block: any) => {
@@ -41,7 +40,7 @@ export const load = (async () => {
 		);
 
 		return {
-			pages: pagesWithBlocks.slice(0, 2)
+			pages: pagesWithBlocks
 		};
 	} catch (error) {
 		console.error('Error fetching database:', error);

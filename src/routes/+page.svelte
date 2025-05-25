@@ -1,11 +1,10 @@
 <script lang="ts">
+	import { type Color } from '$lib/types/colors';
+	import CardLayout from '../components/home/card-layout.svelte';
 	import MainSectionLayout from '../components/home/main-section-layout.svelte';
-	import CareerLayout from '../components/home/career-layout.svelte';
-
-	import { careers } from '$lib/data/careers';
-	import ProjectCard from '../components/home/project-card.svelte';
 
 	export let data;
+	console.log(data.pages);
 </script>
 
 <svelte:head>
@@ -14,43 +13,45 @@
 </svelte:head>
 
 <section class="flex flex-col gap-8">
-	<div class="flex flex-col gap-2 justify-left">
-		<div class="grid grid-cols-1 sm:grid-cols-4 gap-6 items-start">
-			<!-- About -->
-			<div class="grid col-span-3 gap-6">
-				<MainSectionLayout title="In Memory of Me">
-					<p class="text-justify">
-						Motivated Computer Science undergraduate student with a strong foundation in programming
-						and a keen interest in web development and machine learning. Experienced in building
-						websites with payment integration using the Midtrans payment gateway, and developing
-						machine learning models in Python for tasks such as customer segmentation, credit risk
-						classification, and mental health diagnosis. Seeking opportunities in web development
-						and machine learning.
-					</p>
-				</MainSectionLayout>
-
-				<MainSectionLayout title="Careers">
-					{#each careers as career}
-						<CareerLayout {career}></CareerLayout>
-					{/each}
-				</MainSectionLayout>
-			</div>
-			<div class="w-full col-span-3 sm:col-span-1">
-				<div class="flex flex-col gap-2">
-					<a href="/Resume.pdf" target="_blank">Download My Resume</a>
-					<div class="flex items-center justify-between">
-						<h2 class="text-xl font-semibold">Projects</h2>
-						<a href="/projects">See All</a>
-					</div>
-					{#each data.pages as page}
-						{#if page?.properties.Name.type === 'title'}
-							<ProjectCard images={page.images} title={page.properties.Name.title[0].plain_text} />
-						{/if}
-					{/each}
-				</div>
-			</div>
-		</div>
+	<div class="h-[35rem] flex items-center flex-col justify-center">
+		<h1 class="text-6xl font-mochiy text-center text-white">
+			BINTANG <span
+				class="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent"
+				>YOSUA</span
+			>
+		</h1>
+		<p class="font-semibold my-6 text-xl text-center w-full md:w-2/3">
+			Computer Science undergraduate student with a strong foundation in <span
+				class="font-bold text-yellow">programming</span
+			>
+			and a keen interest in
+			<span class="font-bold text-red">web development and machine learning</span>
+		</p>
+		<button class="bg-green text-background font-[900] hover:bg-green/80 hover:cursor-pointer"
+			>CONTACT ME</button
+		>
 	</div>
+
+	<MainSectionLayout
+		title="PROJECTS"
+		description="A showcase of my hands-on creations—where ideas meet execution to solve real-world problems."
+		viewAll="/projects"
+	>
+		{#each data.pages as project}
+			{#if project?.properties.Name.type === 'title' && project?.properties.Description.type === 'rich_text' && project?.properties.Tags.type === 'multi_select' && project?.properties.URL.type === 'url'}
+				<CardLayout
+					name={project?.properties.Name.title[0].plain_text}
+					description={project?.properties.Description.rich_text[0].plain_text}
+					tags={project?.properties.Tags.multi_select.map((tag) => ({
+						name: tag.name,
+						color: tag as unknown as { color: Color }
+					}))}
+					image={project?.images[0]}
+					url={project?.properties.URL.url ?? '#'}
+				/>
+			{/if}
+		{/each}
+	</MainSectionLayout>
 </section>
 
 <style>
@@ -61,8 +62,4 @@
 		align-items: center;
 		flex: 0.6;
 	}
-
-	/* h1 {
-		text-align: left;
-	} */
 </style>

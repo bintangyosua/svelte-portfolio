@@ -43,6 +43,12 @@
 	},
 	"dependencies": {
 		"@fontsource-variable/lora": "^5.2.5",
+		"@fontsource-variable/noto-sans": "^5.2.7",
+		"@fontsource-variable/tilt-warp": "^5.2.7",
+		"@fontsource/alegreya-sans": "^5.2.5",
+		"@fontsource/mochiy-pop-one": "^5.2.5",
+		"@fontsource/mouse-memoirs": "^5.2.5",
+		"@fontsource/noto-sans": "^5.2.7",
 		"@lucide/svelte": "^0.511.0",
 		"@notion-render/client": "^0.0.2",
 		"@notionhq/client": "^3.1.1",

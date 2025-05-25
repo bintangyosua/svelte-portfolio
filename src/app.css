@@ -1,7 +1,13 @@
 @import 'tailwindcss';
-@import '@fontsource/fira-mono';
+
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@import '@fontsource-variable/tilt-warp';
+@import '@fontsource/fira-mono';
+@import '@fontsource/mochiy-pop-one';
+@import '@fontsource/alegreya-sans';
+@import '@fontsource/mouse-memoirs';
 
 /* @import '@notion-render/client/sass/index.css'; */
 
@@ -11,20 +17,47 @@
 
 @source '../node_modules/@skeletonlabs/skeleton-svelte/dist'; */
 
+@theme {
+	/* --color-*: initial; */
+	--color-background: #12181b;
+	--color-red: #ef4444;
+	--color-green: #22c55e;
+	--color-purple: #9333ea;
+	--color-yellow: #eab308;
+	--color-pink: #ec4899;
+	--color-blue: #3b6ec1;
+	--color-gray: #b2becd;
+	--color-gray6: #2a2e35;
+	--color-brown: #744921;
+
+	--font-noto: 'Noto Sans Variable', sans-serif;
+	--font-mono: 'Fira Mono', monospace;
+	--font-alegreya: 'Alegreya Sans', sans-serif;
+	--font-mochiy: 'Mochiy Pop One', sans-serif;
+	--font-mouse: 'Mouse Memoirs', sans-serif;
+	--font-lora: 'Lora Variable', sans-serif;
+
+	--max-width-8xl: 100rem;
+}
+
 :root {
-	--font-body: 'Lora Variable', serif !important;
+	--font-body: 'Noto Sans Variable', sans-serif !important;
 	--font-mono: 'Fira Mono', monospace;
 	--color-bg-0: rgb(202, 216, 228);
 	--color-bg-1: hsl(209, 36%, 86%);
 	--color-bg-2: hsl(224, 44%, 95%);
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
-	--color-text: rgba(0, 0, 0, 0.7);
+	/* --color-text: rgba(0, 0, 0, 0.7); */
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	background-color: #ffffff;
 	font-family: var(--font-body);
-	color: var(--color-text);
+	/* color: var(--color-text); */
+}
+
+button {
+	padding: 10px 20px;
 }
 
 .notion img {

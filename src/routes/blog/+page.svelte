@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { type Color } from '$lib/types/colors';
+	import CardLayout from '../../components/home/card-layout.svelte';
+	import MainSectionLayout from '../../components/home/main-section-layout.svelte';
+
 	export let data;
 </script>
 
@@ -7,50 +11,22 @@
 	<meta name="description" content="Blog Page" />
 </svelte:head>
 
-<section class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-fr">
-	{#if data.pages.length > 0}
-		{#each data.pages as page}
-			{#if page.properties.Slug && page.properties.Slug.type === 'url'}
-				<a
-					href={`/blog/${page.properties.Slug.url}`}
-					class="flex flex-col h-full bg-white rounded shadow overflow-hidden"
-				>
-					<header>
-						{#if page.cover?.type === 'file'}
-							<!-- svelte-ignore a11y_missing_attribute -->
-							<img
-								src={page.cover.file.url}
-								class="object-cover aspect-[21/9] transition-transform duration-300 group-hover:scale-110"
-							/>
-						{:else if page.cover?.type === 'external'}
-							<!-- svelte-ignore a11y_missing_attribute -->
-							<img
-								src={page.cover.external.url}
-								class="object-cover aspect-[21/9] transition-transform duration-300 group-hover:scale-110"
-							/>
-						{/if}
-					</header>
-					<article class="flex-1 space-y-4 p-4">
-						<div>
-							{#if page.properties.Title.type === 'title'}
-								<h2 class="h3">{page.properties.Title.title[0].plain_text}</h2>
-							{/if}
-						</div>
-					</article>
-					<footer class="flex items-center justify-between gap-4 p-4">
-						<small class="opacity-60">
-							<!-- Hello -->
-						</small>
-						<small class="opacity-60">
-							{#if page.properties['Publication Date'] && page.properties['Publication Date'].type === 'date' && page.properties['Publication Date'].date && page.properties['Publication Date'].date.start}
-								On {page.properties['Publication Date'].date.start}
-							{/if}
-						</small>
-					</footer>
-				</a>
-			{/if}
-		{/each}
-	{:else}
-		<p>No pages found.</p>
-	{/if}
-</section>
+<!-- <MainSectionLayout
+	title="PROJECTS"
+	description="A showcase of my hands-on creations—where ideas meet execution to solve real-world problems."
+>
+	{#each data.pages as project}
+		{#if project?.properties.Name.type === 'title' && project?.properties.Description.type === 'rich_text' && project?.properties.Tags.type === 'multi_select' && project?.properties.URL.type === 'url'}
+			<CardLayout
+				name={project?.properties.Name.title[0].plain_text}
+				description={project?.properties.Description.rich_text[0].plain_text}
+				tags={project?.properties.Tags.multi_select.map((tag) => ({
+					name: tag.name,
+					color: tag as unknown as Color
+				}))}
+				image={project?.images[0]}
+				url={project?.properties.URL.url ?? '#'}
+			/>
+		{/if}
+	{/each}
+</MainSectionLayout> -->

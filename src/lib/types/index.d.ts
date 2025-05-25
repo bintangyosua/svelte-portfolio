@@ -7,10 +7,11 @@ export type CareerType = {
 	projects: string[];
 };
 
-export type ProjectType = {
+export type CardType = {
 	name: string;
 	start: string;
 	end: string;
-	details: string[];
+	description: string[];
 	tags: string[];
+	description: string;
 };

@@ -11,6 +11,24 @@ importers:
       '@fontsource-variable/lora':
         specifier: ^5.2.5
         version: 5.2.5
+      '@fontsource-variable/noto-sans':
+        specifier: ^5.2.7
+        version: 5.2.7
+      '@fontsource-variable/tilt-warp':
+        specifier: ^5.2.7
+        version: 5.2.7
+      '@fontsource/alegreya-sans':
+        specifier: ^5.2.5
+        version: 5.2.5
+      '@fontsource/mochiy-pop-one':
+        specifier: ^5.2.5
+        version: 5.2.5
+      '@fontsource/mouse-memoirs':
+        specifier: ^5.2.5
+        version: 5.2.5
+      '@fontsource/noto-sans':
+        specifier: ^5.2.7
+        version: 5.2.7
       '@lucide/svelte':
         specifier: ^0.511.0
         version: 0.511.0(svelte@5.30.2)
@@ -321,8 +339,26 @@ packages:
   '@fontsource-variable/lora@5.2.5':
     resolution: {integrity: sha512-eupTrzQnDFr3i9pci0efxfT0mCjGmWJNmDyvsl9Wq11JCyNr5ZN7bTjhIT6/q9daq5CshTsowg0/BH2gERbtXQ==}
 
+  '@fontsource-variable/noto-sans@5.2.7':
+    resolution: {integrity: sha512-VaA+clV7xTOx+pSOdyjr9nR7khjrJGr7ZHs2KXlx+AqLyG/SUVBadNwauCH0rvF/eZkZr67neNxdKMOLtVxweg==}
+
+  '@fontsource-variable/tilt-warp@5.2.7':
+    resolution: {integrity: sha512-+pnuBA+c+bdmp/RgUQu7YSmVGi/vfiW8b4zOEJWhw+y3+3BlvcDr2UxkeAJoxiGveS5QLzfAAwElFYKmzIHO5w==}
+
+  '@fontsource/alegreya-sans@5.2.5':
+    resolution: {integrity: sha512-gYr8J2ExytMwkYWjfN4M+HcPb2g0vDY4MEbHLRHLjmdaDnbJpo4RmTq0NjKpLIirshvE9DrpWjw6PcVx6Q5hlw==}
+
   '@fontsource/fira-mono@5.2.6':
     resolution: {integrity: sha512-6pyiGeFH+5DP5sICSwx5wu+9BlTEMTKki7bTppsEqXJysi1MiK82n6oSUaYkQWRLH51+DK7zv2JJsi82cOIS3g==}
+
+  '@fontsource/mochiy-pop-one@5.2.5':
+    resolution: {integrity: sha512-ch6o2n771IyTatPa6nqbUXk584DvYXuKuKcdh63QDj26CwqJPghidZVj+8+UPaPYkRbTLyKmrKx9ktjDtupg/Q==}
+
+  '@fontsource/mouse-memoirs@5.2.5':
+    resolution: {integrity: sha512-uPzzqs9kcNko6FXlh9e2pxQeZ7fNEh4SEk2Z0MYHWpPJGwZeAuLDvPj57cj42KvCVvZznlLO9DghGVSJ4Zrvng==}
+
+  '@fontsource/noto-sans@5.2.7':
+    resolution: {integrity: sha512-mTpMSMft6Nb+ZSF4DSiJVYnLzKCRjHNFieZ/swuxSDQK+v1hjUeDTBxLHKUdfmC+ZPg6TUEWw4oRq2ltnDbSjQ==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2021,7 +2057,19 @@ snapshots:
 
   '@fontsource-variable/lora@5.2.5': {}
 
+  '@fontsource-variable/noto-sans@5.2.7': {}
+
+  '@fontsource-variable/tilt-warp@5.2.7': {}
+
+  '@fontsource/alegreya-sans@5.2.5': {}
+
   '@fontsource/fira-mono@5.2.6': {}
+
+  '@fontsource/mochiy-pop-one@5.2.5': {}
+
+  '@fontsource/mouse-memoirs@5.2.5': {}
+
+  '@fontsource/noto-sans@5.2.7': {}
 
   '@humanfs/core@0.19.1': {}
 
