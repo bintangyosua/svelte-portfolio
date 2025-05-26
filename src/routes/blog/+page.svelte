@@ -9,20 +9,27 @@
 	// Simpler inline approach - filter and cast in one step
 	$: validPosts = data.pages.filter((post) => {
 		const props = post?.properties;
+		const hasValidCategory =
+			!props?.Category || // kalau Category tidak ada, dianggap valid
+			props.Category.type === 'select';
+
+		const hasValidTags =
+			!props?.Tags || // kalau Tags tidak ada, dianggap valid
+			props.Tags.type === 'multi_select';
+
 		return (
-			props?.Title.type === 'title' &&
-			props?.Title?.title?.length > 0 &&
+			props?.Title?.type === 'title' &&
+			props.Title.title?.length > 0 &&
 			props?.['Publication Date']?.type === 'date' &&
-			props?.['Publication Date']?.date?.start &&
+			props['Publication Date'].date?.start &&
 			props?.Slug?.type === 'rich_text' &&
-			props?.Slug?.rich_text?.length > 0 &&
-			props?.Category?.type === 'select' &&
-			props?.Category?.select?.name &&
-			props?.Tags?.type === 'multi_select'
+			props.Slug.rich_text?.length > 0 &&
+			hasValidCategory &&
+			hasValidTags
 		);
 	});
 
-	console.log({ data });
+	console.log({ validPosts });
 
 	function handlePageChange(event: { detail: any }) {
 		console.log('Page changed:', event.detail);
@@ -64,11 +71,12 @@
 	<PaginationContainer
 		items={validPosts}
 		itemsPerPage={4}
-		wrapperClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 "
+		wrapperClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10"
 		on:pageChange={handlePageChange}
 		let:item={post}
 	>
 		{@const postData = getPostData(post)}
+		{console.log({ postData })}
 		<PostCard
 			title={postData.title}
 			category={postData.category}

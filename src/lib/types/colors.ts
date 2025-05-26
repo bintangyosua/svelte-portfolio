@@ -6,8 +6,8 @@ export const colorClasses = {
 	blue: 'bg-blue text-white',
 	gray: 'bg-gray/40',
 	brown: 'bg-brown',
-	pink: 'bg-pink text-background',
-	default: 'bg-background',
+	pink: 'bg-pink text-white',
+	default: 'bg-blue2 text-white',
 	orange: 'bg-orange'
 };
 

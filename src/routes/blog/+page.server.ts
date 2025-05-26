@@ -4,7 +4,13 @@ import { notionService } from '$lib/api/notion';
 
 export const load = (async () => {
 	try {
-		const pages = await notionService.getPages(NOTION_BLOG_DATABASE_ID);
+		const pages = await notionService.getPages(NOTION_BLOG_DATABASE_ID, [
+			{
+				property: 'Publication Date',
+				direction: 'descending'
+			}
+		]);
+		console.log({ pages });
 		return {
 			pages
 		};
