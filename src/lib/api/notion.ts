@@ -1,5 +1,5 @@
 import { NOTION_API_KEY, NOTION_BLOG_DATABASE_ID } from '$env/static/private';
-import type { SortObject } from '$lib/types';
+import type { FilterObject, SortObject } from '$lib/types';
 import { Client } from '@notionhq/client';
 import type {
 	DatabaseObjectResponse,
@@ -22,15 +22,19 @@ function isFullPage(
 }
 
 export const notionService = {
-	async getPages(NOTION_DATABASE_ID: string, sorts?: SortObject[]): Promise<PageObjectResponse[]> {
+	async getPages(
+		NOTION_DATABASE_ID: string,
+		sorts?: SortObject[],
+		filter?: FilterObject
+	): Promise<PageObjectResponse[]> {
 		const response = await notion.databases.query({
 			database_id: NOTION_DATABASE_ID,
-			sorts
+			sorts,
+			filter
 		});
 
 		// Filter out partial pages and return only full pages
 		const fullPages = response.results.filter(isFullPage);
-
 		return fullPages;
 	},
 

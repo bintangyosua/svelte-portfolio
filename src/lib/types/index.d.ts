@@ -19,3 +19,26 @@ export type CardType = {
 export type SortObject =
 	| { property: string; direction: 'ascending' | 'descending' }
 	| { timestamp: 'created_time' | 'last_edited_time'; direction: 'ascending' | 'descending' };
+
+export type FilterObject =
+	| PropertyFilter
+	| TimestampCreatedTimeFilter
+	| TimestampLastEditedTimeFilter
+	| {
+			or: Array<
+				| PropertyFilter
+				| TimestampCreatedTimeFilter
+				| TimestampLastEditedTimeFilter
+				| { or: Array<PropertyFilter> }
+				| { and: Array<PropertyFilter> }
+			>;
+	  }
+	| {
+			and: Array<
+				| PropertyFilter
+				| TimestampCreatedTimeFilter
+				| TimestampLastEditedTimeFilter
+				| { or: Array<PropertyFilter> }
+				| { and: Array<PropertyFilter> }
+			>;
+	  };

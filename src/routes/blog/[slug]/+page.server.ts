@@ -4,13 +4,18 @@ import type { PageServerLoad } from './$types';
 import { NOTION_BLOG_DATABASE_ID } from '$env/static/private';
 
 export const load = (async ({ params }) => {
-	const pages = await notionService.getPages(NOTION_BLOG_DATABASE_ID);
+	const pages = await notionService.getPages(NOTION_BLOG_DATABASE_ID, [], {
+		property: 'Slug',
+		rich_text: {
+			contains: ''
+		}
+	});
 
 	const filteredPage = pages.find(
 		(page) =>
 			page.properties.Slug &&
-			page.properties.Slug.type === 'url' &&
-			page.properties.Slug.url === params.slug
+			page.properties.Slug.type === 'rich_text' &&
+			page.properties.Slug.rich_text[0].plain_text === params.slug
 	);
 
 	if (filteredPage) {

@@ -80,19 +80,35 @@ button {
 	background-color: var(--color-bg-1);
 }
 
-.notion ol,
+.notion ul,
+ol {
+	@apply my-4;
+}
+
 .notion ul {
 	list-style-type: disc; /* sama dengan list-disc */
 	margin-left: 2rem; /* sama dengan ml-4 (16px) */
 }
 
+.notion ol {
+	list-style-type: decimal; /* sama dengan list-disc */
+	margin-left: 2rem; /* sama dengan ml-4 (16px) */
+}
+
+.notion h1 {
+	@apply text-3xl font-semibold my-4 text-left;
+}
+
 .notion h2 {
+	@apply text-2xl font-semibold mt-8 my-4;
+}
+
+.notion h3 {
 	@apply text-xl font-semibold my-4;
 }
 
-.notion-code {
-	margin-left: 0.5rem;
-}
+/* .notion-code {
+} */
 
 /* body {
 	min-height: 100vh;
