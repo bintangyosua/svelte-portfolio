@@ -24,7 +24,7 @@
 		/>
 		<section class="p-5 flex flex-col gap-5 flex-grow">
 			<h5 class="text-xl font-bold text-white w-full">{name}</h5>
-			<p class="text-gray3 font-semibold flex-grow">
+			<p class="text-gray3 font-semibold flex-grow text-justify">
 				{description}
 			</p>
 			<div class="w-full text-white text-xs flex flex-wrap gap-x-2 gap-y-2 mt-auto">
