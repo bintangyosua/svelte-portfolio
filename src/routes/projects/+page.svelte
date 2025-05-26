@@ -54,7 +54,7 @@
 >
 	<PaginationContainer
 		items={validProjects}
-		itemsPerPage={4}
+		itemsPerPage={2}
 		wrapperClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10 "
 		on:pageChange={handlePageChange}
 		let:item={project}

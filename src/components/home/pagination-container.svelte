@@ -7,7 +7,7 @@
 	export let itemsPerPage: number = 12;
 	export let showCounter: boolean = true;
 	export let showPageNumbers: boolean = true;
-	export let maxPageNumbers: number = 2; // How many page numbers to show
+	export let maxPageNumbers: number = 3; // How many page numbers to show
 	export let containerClass: string = '';
 	export let wrapperClass: string = ''; // For items wrapper
 	export let paginationClass: string = 'flex items-center justify-center space-x-2 mt-8';
@@ -119,7 +119,7 @@
 				</button>
 
 				<!-- Page Numbers -->
-				{#if showPageNumbers}
+				<!-- {#if showPageNumbers}
 					{#if pageNumbers[0] > 1}
 						<span class="px-2 text-gray-500">...</span>
 					{/if}
@@ -137,7 +137,7 @@
 					{#if pageNumbers[pageNumbers.length - 1] < totalPages}
 						<span class="px-2 text-gray-500">...</span>
 					{/if}
-				{/if}
+				{/if} -->
 
 				<!-- Next Page -->
 				<button
