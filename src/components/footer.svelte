@@ -33,6 +33,8 @@
 				><TableauIcon color="currentColor" /></a
 			>
 		</div>
-		<a href="https://kit.svelte.dev" class="text-xs">© {year} Bintang Yosua</a>
+		<a href="https://kit.svelte.dev" class="text-xs"
+			>© {year} Bintang Yosua. All Rights Reserved.</a
+		>
 	</div>
 </footer>

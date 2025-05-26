@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { colorClasses, type Color } from '$lib/types/colors';
+	import Badge from './badge.svelte';
 
 	export let title: string;
 	export let url: string;
@@ -8,9 +9,7 @@
 	// export let publishedDate: string;
 	export let tags: {
 		name: string;
-		color: {
-			color: Color;
-		};
+		color: Color;
 	}[] = [];
 </script>
 
@@ -34,7 +33,7 @@
 			<div class="w-full text-white text-xs flex flex-wrap gap-x-2 gap-y-2 mt-auto">
 				{#if tags.length > 0}
 					{#each tags as tag}
-						<span class={`${colorClasses[tag.color.color]} px-2 py-1 rounded-lg`}>#{tag.name}</span>
+						<Badge color={tag.color}>{tag.name}</Badge>
 					{/each}
 				{/if}
 			</div>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { formatDate } from '$lib/date.';
 	import { colorClasses, type Color } from '$lib/types/colors';
+	import Badge from './badge.svelte';
 
 	export let title: string;
 	export let publicationDate: string;
@@ -14,8 +15,6 @@
 		name: string;
 		color: Color;
 	}[];
-
-	console.log({ title, publicationDate, slug, category, image, tags });
 </script>
 
 <article
@@ -29,9 +28,7 @@
 		/>
 		<section class="p-5 flex flex-col gap-5 flex-grow">
 			{#if category.name}
-				<span class={`${colorClasses[category.color]} text-xs px-2 py-1 rounded-lg w-fit`}
-					>{category.name}</span
-				>
+				<Badge color={category.color}>{category.name}</Badge>
 			{/if}
 			<h5 class="text-xl font-bold text-white w-full">{title}</h5>
 			<div class="flex items-center gap-x-2 -mt-3">
@@ -40,7 +37,7 @@
 			<div class="w-full text-white text-xs flex flex-wrap gap-x-2 gap-y-2 mt-auto">
 				{#if tags.length >= 0}
 					{#each tags as tag}
-						<span class={`${colorClasses[tag.color]} px-2 py-1 rounded-lg`}>#{tag.name}</span>
+						<Badge color={tag.color}>#{tag.name}</Badge>
 					{/each}
 				{/if}
 			</div>

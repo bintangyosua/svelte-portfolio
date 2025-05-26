@@ -24,7 +24,7 @@
 	});
 
 	function handleLoadMore(event: { detail: any }) {
-		console.log('Loading more publications:', event.detail);
+		// console.log('Loading more publications:', event.detail);
 	}
 
 	// Helper function to safely access properties
@@ -38,7 +38,7 @@
 			tags:
 				(props.Tags as any)?.multi_select?.map((tag: any) => ({
 					name: tag.name,
-					color: tag as unknown as { color: Color }
+					color: tag.color as unknown as Color
 				})) || []
 		};
 	}

@@ -10,7 +10,6 @@ export const load = (async () => {
 				direction: 'descending'
 			}
 		]);
-		console.log({ pages });
 		return {
 			pages
 		};

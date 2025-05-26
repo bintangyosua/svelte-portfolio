@@ -29,10 +29,7 @@
 		);
 	});
 
-	console.log({ validPosts });
-
 	function handlePageChange(event: { detail: any }) {
-		console.log('Page changed:', event.detail);
 		// You can add analytics or other side effects here
 		// Scroll to top on page change
 		window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -76,7 +73,6 @@
 		let:item={post}
 	>
 		{@const postData = getPostData(post)}
-		{console.log({ postData })}
 		<PostCard
 			title={postData.title}
 			category={postData.category}
