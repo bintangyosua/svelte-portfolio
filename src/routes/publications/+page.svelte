@@ -56,7 +56,7 @@
 	<UnlimitedScroll
 		items={validPublications}
 		itemsPerPage={3}
-		loadMoreText="Load More Publications"
+		loadMoreText="LOAD MORE"
 		wrapperClass="flex flex-col gap-6"
 		on:loadMore={handleLoadMore}
 		let:item={page}

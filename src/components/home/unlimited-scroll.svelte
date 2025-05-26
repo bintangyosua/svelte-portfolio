@@ -57,7 +57,7 @@
 			<div class="flex justify-center my-8">
 				<button class={buttonClass} on:click={loadMore} type="button">
 					<slot name="loadMoreButton" {remainingItems}>
-						{loadMoreText} ({remainingItems} remaining)
+						{loadMoreText} ({remainingItems} REMAINING)
 					</slot>
 				</button>
 			</div>
