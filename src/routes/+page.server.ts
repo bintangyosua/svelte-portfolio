@@ -2,18 +2,34 @@
 // it so that it gets served as a static asset in production
 // export const prerender = true;
 
-import { NOTION_PROJECTS_DATABASE_ID } from '$env/static/private';
+import { NOTION_PROJECTS_DATABASE_ID, NOTION_PUBLICATIONS_DATABASE_ID } from '$env/static/private';
 import type { PageServerLoad } from './$types';
 import { notionService } from '$lib/api/notion';
+import { projects } from '$lib/data/projects';
 
 export const ssr = true;
 
 export const load = (async () => {
 	try {
-		const pages = await notionService.getPages(NOTION_PROJECTS_DATABASE_ID);
+		const projects = await notionService.getPages(NOTION_PROJECTS_DATABASE_ID);
 
-		const pagesWithBlocks = await Promise.all(
-			pages.map(async (page, i) => {
+		const publications = await notionService.getPages(NOTION_PUBLICATIONS_DATABASE_ID, [
+			{ property: 'Release Date', direction: 'descending' }
+		]);
+
+		const publicationsWithBlocks = await Promise.all(
+			publications.map(async (page, i) => {
+				if (i >= 3) {
+					return;
+				}
+				return {
+					...page
+				};
+			})
+		);
+
+		const projectsWithBlocks = await Promise.all(
+			projects.map(async (page, i) => {
 				if (i >= 4) {
 					return;
 				}
@@ -40,12 +56,14 @@ export const load = (async () => {
 		);
 
 		return {
-			pages: pagesWithBlocks
+			projects: projectsWithBlocks,
+			publications: publicationsWithBlocks
 		};
 	} catch (error) {
 		console.error('Error fetching database:', error);
 		return {
-			pages: []
+			projects: [],
+			publications: []
 		};
 	}
 }) satisfies PageServerLoad;

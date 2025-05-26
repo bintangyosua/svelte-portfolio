@@ -12,7 +12,6 @@
 			color: Color;
 		};
 	}[] = [];
-	export let abstractLength: number;
 </script>
 
 <article
@@ -20,12 +19,10 @@
 >
 	<a href={url} class="no-underline flex flex-col h-full" target="_blank">
 		<section class="p-5 flex flex-col gap-5 flex-grow">
-			<h5 class="text-xl font-bold text-white w-full">{title}</h5>
+			<h5 class="text-md sm:text-lg md:text-xl font-bold text-white w-full">{title}</h5>
 			<div class="-mt-4">{new Date(releaseDate).toDateString()}</div>
-			<p class="text-gray3 font-semibold flex-grow text-justify">
-				{abstract.length > abstractLength
-					? abstract.substring(0, abstractLength) + '...'
-					: abstract}
+			<p class="text-gray3 font-semibold flex-grow text-justify line-clamp-3">
+				{abstract}
 			</p>
 			<div class="w-full text-white text-xs flex flex-wrap gap-x-2 gap-y-2 mt-auto">
 				{#if tags.length > 0}

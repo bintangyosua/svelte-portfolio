@@ -35,7 +35,6 @@
 			{#if page?.properties?.Title?.type === 'title' && page?.properties?.Title?.title?.length > 0 && page?.properties?.URL?.type === 'url' && page?.properties?.URL?.url && page?.properties?.['Release Date']?.type === 'date' && page?.properties?.['Release Date']?.date?.start && page?.properties?.Abstract?.type === 'rich_text' && page?.properties?.Tags?.type === 'multi_select'}
 				<PublicationLayout
 					releaseDate={page.properties['Release Date'].date.start}
-					abstractLength={540}
 					title={page.properties.Title.title[0].plain_text}
 					abstract={page.properties.Abstract.rich_text[0].plain_text}
 					url={page.properties.URL.url}

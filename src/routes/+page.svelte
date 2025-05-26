@@ -3,6 +3,7 @@
 	import CardGridLayout from '../components/home/card-grid-layout.svelte';
 	import CardLayout from '../components/home/card-layout.svelte';
 	import MainSectionLayout from '../components/home/main-section-layout.svelte';
+	import PublicationLayout from '../components/home/publication-layout.svelte';
 
 	export let data;
 </script>
@@ -13,7 +14,7 @@
 </svelte:head>
 
 <section class="flex flex-col gap-8">
-	<div class="h-[25rem] sm:my-10 flex items-center flex-col justify-center">
+	<div class="h-[25rem] my-12 flex items-center flex-col justify-center">
 		<h1 class="text-6xl font-mochiy text-center text-white">
 			BINTANG <span
 				class="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent"
@@ -39,7 +40,7 @@
 		viewAll="/projects"
 	>
 		<CardGridLayout>
-			{#each data.pages as project}
+			{#each data.projects as project}
 				{#if project?.properties.Name.type === 'title' && project?.properties.Description.type === 'rich_text' && project?.properties.Tags.type === 'multi_select' && project?.properties.URL.type === 'url'}
 					<CardLayout
 						name={project?.properties.Name.title[0].plain_text}
@@ -54,6 +55,32 @@
 				{/if}
 			{/each}
 		</CardGridLayout>
+	</MainSectionLayout>
+
+	<MainSectionLayout
+		class="mt-20"
+		title="PUBLICATIONS"
+		description="A curated collection of research publications and academic contributions, each reflecting my commitment to solving real-world problems through rigorous analysis, thoughtful design, and data-driven insights."
+		viewAll="/publications"
+	>
+		{#if data.publications.length === 0}
+			<p>Publications not found</p>
+		{:else}
+			{#each data.publications as page}
+				{#if page?.properties?.Title?.type === 'title' && page?.properties?.Title?.title?.length > 0 && page?.properties?.URL?.type === 'url' && page?.properties?.URL?.url && page?.properties?.['Release Date']?.type === 'date' && page?.properties?.['Release Date']?.date?.start && page?.properties?.Abstract?.type === 'rich_text' && page?.properties?.Tags?.type === 'multi_select'}
+					<PublicationLayout
+						releaseDate={page.properties['Release Date'].date.start}
+						title={page.properties.Title.title[0].plain_text}
+						abstract={page.properties.Abstract.rich_text[0].plain_text}
+						url={page.properties.URL.url}
+						tags={page?.properties.Tags.multi_select.map((tag) => ({
+							name: tag.name,
+							color: tag as unknown as { color: Color }
+						}))}
+					></PublicationLayout>
+				{/if}
+			{/each}
+		{/if}
 	</MainSectionLayout>
 </section>
 

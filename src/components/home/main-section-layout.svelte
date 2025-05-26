@@ -10,7 +10,7 @@
 </script>
 
 <div class={`flex flex-col items-center gap-6 ${className}`}>
-	<h2 class="font-mochiy text-5xl text-white">{title}</h2>
+	<h2 class="font-mochiy text-4xl md:text-5xl text-white">{title}</h2>
 	<p class="text-center max-w-7xl">
 		{description}
 	</p>

@@ -50,6 +50,7 @@
 		"@lucide/svelte": "^0.511.0",
 		"@notion-render/client": "^0.0.2",
 		"@notionhq/client": "^3.1.1",
+		"@tailwindcss/line-clamp": "^0.4.4",
 		"axios": "^1.9.0"
 	},
 	"pnpm": {
