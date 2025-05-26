@@ -29,8 +29,6 @@ export const load = (async () => {
 			})
 		);
 
-		console.log(pagesWithBlocks);
-
 		return {
 			pages: pagesWithBlocks
 		};

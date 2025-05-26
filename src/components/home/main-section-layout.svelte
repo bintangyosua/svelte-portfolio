@@ -4,17 +4,18 @@
 
 	export let children;
 	export let viewAll: string = '';
+
+	let className: string = '';
+	export { className as class };
 </script>
 
-<div class=" flex flex-col items-center gap-6">
+<div class={`flex flex-col items-center gap-6 ${className}`}>
 	<h2 class="font-mochiy text-5xl text-white">{title}</h2>
-	<p>
+	<p class="text-center max-w-7xl">
 		{description}
 	</p>
 	<div class="my-8 bg-gradient-to-r from-gray-700 to-gray-500 h-1 w-32 rounded-xl"></div>
-	<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10">
-		{@render children()}
-	</div>
+	{@render children()}
 	{#if viewAll !== ''}
 		<div class="w-full mx-auto flex justify-center mt-12">
 			<a href={viewAll}>

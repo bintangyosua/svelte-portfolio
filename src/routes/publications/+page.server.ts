@@ -6,7 +6,9 @@ export const ssr = true;
 
 export const load = (async () => {
 	try {
-		const pages = await notionService.getPages(NOTION_PUBLICATIONS_DATABASE_ID);
+		const pages = await notionService.getPages(NOTION_PUBLICATIONS_DATABASE_ID, [
+			{ property: 'Release Date', direction: 'descending' }
+		]);
 
 		const pagesWithBlocks = await Promise.all(
 			pages.map(async (page, i) => {

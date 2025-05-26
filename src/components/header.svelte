@@ -21,7 +21,7 @@
 						>
 					</h1>
 				</a>
-				<ul class="flex items-center gap-5 text-lg">
+				<ul class="flex items-center gap-3 sm:gap-4 md:gap-5 text-lg">
 					{#each navItems as item}
 						<li>
 							<a href={item.href}>

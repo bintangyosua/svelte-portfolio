@@ -1,8 +1,6 @@
 <script lang="ts">
 	import '@notion-render/client/sass/theme.scss';
 	export let data;
-
-	console.log(data.page);
 </script>
 
 <svelte:head>

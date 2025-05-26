@@ -1,0 +1,39 @@
+<script lang="ts">
+	import { colorClasses, type Color } from '$lib/types/colors';
+
+	export let title: string;
+	export let url: string;
+	export let abstract: string;
+	export let releaseDate: string;
+	// export let publishedDate: string;
+	export let tags: {
+		name: string;
+		color: {
+			color: Color;
+		};
+	}[] = [];
+	export let abstractLength: number;
+</script>
+
+<article
+	class="overflow-hidden shadow-xl bg-gray6 hover:scale-105 rounded-xl transition-transform ease-in-out duration-500 flex flex-col"
+>
+	<a href={url} class="no-underline flex flex-col h-full" target="_blank">
+		<section class="p-5 flex flex-col gap-5 flex-grow">
+			<h5 class="text-xl font-bold text-white w-full">{title}</h5>
+			<div class="-mt-4">{new Date(releaseDate).toDateString()}</div>
+			<p class="text-gray3 font-semibold flex-grow text-justify">
+				{abstract.length > abstractLength
+					? abstract.substring(0, abstractLength) + '...'
+					: abstract}
+			</p>
+			<div class="w-full text-white text-xs flex flex-wrap gap-x-2 gap-y-2 mt-auto">
+				{#if tags.length > 0}
+					{#each tags as tag}
+						<span class={`${colorClasses[tag.color.color]} px-2 py-1 rounded-lg`}>#{tag.name}</span>
+					{/each}
+				{/if}
+			</div>
+		</section>
+	</a>
+</article>
