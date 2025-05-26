@@ -1,6 +1,6 @@
 export const colorClasses = {
 	green: 'bg-green',
-	purple: 'bg-purple',
+	purple: 'bg-purple text-white',
 	red: 'bg-red',
 	yellow: 'bg-yellow text-background',
 	blue: 'bg-blue text-white',

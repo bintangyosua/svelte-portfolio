@@ -1,7 +1,9 @@
 import { notionService } from '$lib/api/notion';
 import { NotionRenderer } from '@notion-render/client';
 import type { PageServerLoad } from './$types';
-import { NOTION_BLOG_DATABASE_ID } from '$env/static/private';
+import { NOTION_API_KEY, NOTION_BLOG_DATABASE_ID } from '$env/static/private';
+import hljs from '@notion-render/hljs-plugin';
+import { Client } from '@notionhq/client';
 
 export const load = (async ({ params }) => {
 	const pages = await notionService.getPages(NOTION_BLOG_DATABASE_ID, [], {
@@ -21,7 +23,10 @@ export const load = (async ({ params }) => {
 	if (filteredPage) {
 		const page = (await notionService.getBlocks(filteredPage.id)) as any;
 
-		const renderer = new NotionRenderer();
+		const client = new Client({ auth: NOTION_API_KEY });
+		const renderer = new NotionRenderer({ client });
+
+		renderer.use(hljs({}));
 
 		const html = await renderer.render(...page);
 

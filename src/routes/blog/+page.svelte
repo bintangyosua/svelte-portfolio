@@ -22,6 +22,8 @@
 		);
 	});
 
+	console.log({ data });
+
 	function handlePageChange(event: { detail: any }) {
 		console.log('Page changed:', event.detail);
 		// You can add analytics or other side effects here
@@ -32,7 +34,6 @@
 	// Helper function to safely access properties
 	function getPostData(post: any) {
 		const props = post.properties;
-		console.log({ props });
 		return {
 			title: (props.Title as any)?.title?.[0]?.plain_text || '',
 			publicationDate: (props['Publication Date'] as any)?.date?.start || '',

@@ -8,6 +8,10 @@
 		<title>{data.page?.properties.Title.title[0].plain_text}</title>
 		<meta name="description" content={data.page?.properties.Title.title[0].plain_text} />
 	{/if}
+	<link
+		rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-light.css"
+	/>
 </svelte:head>
 
 <section class="notion text-justify w-full">

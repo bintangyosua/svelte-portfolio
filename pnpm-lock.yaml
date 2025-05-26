@@ -35,6 +35,9 @@ importers:
       '@notion-render/client':
         specifier: ^0.0.2
         version: 0.0.2
+      '@notion-render/hljs-plugin':
+        specifier: ^0.0.2
+        version: 0.0.2
       '@notionhq/client':
         specifier: ^3.1.1
         version: 3.1.1
@@ -44,6 +47,9 @@ importers:
       axios:
         specifier: ^1.9.0
         version: 1.9.0
+      highlight.js:
+        specifier: ^11.11.1
+        version: 11.11.1
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.5
@@ -414,6 +420,9 @@ packages:
 
   '@notion-render/client@0.0.2':
     resolution: {integrity: sha512-1WFyoH92nCV+7wYKFJwyteP/lbj8MRLY//2f62Ebi+G7GwGmsCevAta3wB/igXGgIzh6EmhMlqB2GxnHUwXheQ==}
+
+  '@notion-render/hljs-plugin@0.0.2':
+    resolution: {integrity: sha512-Wn69BsK2W2FP8tiDdj80ebz/BcP1PxhfUCI5JzdgloZGCZrbI4vPF4q/hsUFbBEa4OnqdFGyOjqFwVOHCqNqxQ==}
 
   '@notionhq/client@3.1.1':
     resolution: {integrity: sha512-sAFNjrW5IVX1jgVRxn83mtLNphWsp4qj1koW5YKx9w0qH1pJLfJyAjedwvIFjWG2VNzPuXxVrXpQaRnxSUt5aQ==}
@@ -1081,6 +1090,10 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
+
+  highlight.js@11.11.1:
+    resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
+    engines: {node: '>=12.0.0'}
 
   htmlparser2@8.0.2:
     resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
@@ -1988,6 +2001,11 @@ snapshots:
     dependencies:
       sanitize-html: 2.17.0
 
+  '@notion-render/hljs-plugin@0.0.2':
+    dependencies:
+      '@notion-render/client': 0.0.2
+      highlight.js: 11.11.1
+
   '@notionhq/client@3.1.1': {}
 
   '@polka/url@1.0.0-next.29': {}
@@ -2661,6 +2679,8 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
+
+  highlight.js@11.11.1: {}
 
   htmlparser2@8.0.2:
     dependencies:

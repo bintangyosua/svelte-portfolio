@@ -107,8 +107,9 @@ ol {
 	@apply text-xl font-semibold my-4;
 }
 
-/* .notion-code {
-} */
+.notion-code {
+	background-color: black;
+}
 
 /* body {
 	min-height: 100vh;
