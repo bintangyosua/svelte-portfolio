@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { type Color } from '$lib/types/colors';
+	import { config } from '$lib/config';
 	import CardGridLayout from '../components/home/card-grid-layout.svelte';
 	import CardLayout from '../components/home/card-layout.svelte';
 	import MainSectionLayout from '../components/home/main-section-layout.svelte';
 	import PublicationLayout from '../components/home/publication-layout.svelte';
-	import ScrollShow from '../components/scroll-show.svelte';
 
 	export let data;
 </script>
@@ -29,8 +28,10 @@
 			and a keen interest in
 			<span class="font-bold text-red">web development and machine learning</span>
 		</p>
-		<button class="bg-green text-background font-[900] hover:bg-green/80 hover:cursor-pointer"
-			>CONTACT ME</button
+		<a href={config.mailto}
+			><button class="bg-green text-background font-[900] hover:bg-green/80 hover:cursor-pointer"
+				>CONTACT ME</button
+			></a
 		>
 	</div>
 
@@ -48,7 +49,7 @@
 						description={project?.properties.Description.rich_text[0].plain_text}
 						tags={project?.properties.Tags.multi_select.map((tag) => ({
 							name: tag.name,
-							color: tag as unknown as { color: Color }
+							color: tag.color
 						}))}
 						image={project?.images[0]}
 						url={project?.properties.URL.url ?? '#'}
@@ -77,7 +78,7 @@
 							url={page.properties.URL.url}
 							tags={page?.properties.Tags.multi_select.map((tag) => ({
 								name: tag.name,
-								color: tag as unknown as { color: Color }
+								color: tag.color
 							}))}
 						></PublicationLayout>
 					{/if}

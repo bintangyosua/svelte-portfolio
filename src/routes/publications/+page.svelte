@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { type Color } from '$lib/types/colors';
+	import type { PageObjectResponse } from '@notionhq/client';
 	import MainSectionLayout from '../../components/home/main-section-layout.svelte';
 	import PublicationLayout from '../../components/home/publication-layout.svelte';
 	import UnlimitedScroll from '../../components/home/unlimited-scroll.svelte';
@@ -28,18 +29,27 @@
 	}
 
 	// Helper function to safely access properties
-	function getPublicationData(page: any) {
+	function getPublicationData(page: PageObjectResponse) {
 		const props = page.properties;
+
 		return {
-			releaseDate: (props['Release Date'] as any)?.date?.start || '',
-			title: (props.Title as any)?.title?.[0]?.plain_text || '',
-			abstract: (props.Abstract as any)?.rich_text?.[0]?.plain_text || '',
-			url: (props.URL as any)?.url || '',
+			releaseDate:
+				props['Release Date'] && 'date' in props['Release Date']
+					? (props['Release Date'].date?.start ?? '')
+					: '',
+			title: props.Title && 'title' in props.Title ? props.Title.title?.[0]?.plain_text : '',
+			abstract:
+				props.Abstract && 'rich_text' in props.Abstract
+					? props.Abstract.rich_text?.[0]?.plain_text
+					: '',
+			url: props.URL && 'url' in props.URL ? (props.URL.url ?? '') : '',
 			tags:
-				(props.Tags as any)?.multi_select?.map((tag: any) => ({
-					name: tag.name,
-					color: tag.color as unknown as Color
-				})) || []
+				props.Tags && 'multi_select' in props.Tags
+					? props.Tags.multi_select.map((tag) => ({
+							name: tag.name,
+							color: tag.color
+						}))
+					: []
 		};
 	}
 </script>

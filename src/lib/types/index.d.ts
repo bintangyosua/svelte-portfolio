@@ -1,3 +1,5 @@
+import type { Color } from './colors';
+
 export type CareerType = {
 	company: string;
 	position: string;
@@ -14,6 +16,11 @@ export type CardType = {
 	description: string[];
 	tags: string[];
 	description: string;
+};
+
+export type PartialSelectResponse = {
+	name: string;
+	color: Color;
 };
 
 export type SortObject =

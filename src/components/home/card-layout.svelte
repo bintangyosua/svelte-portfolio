@@ -1,17 +1,13 @@
 <script lang="ts">
-	import { colorClasses, type Color } from '$lib/types/colors';
+	import type { PartialSelectResponse } from '$lib/types';
 	import Badge from './badge.svelte';
 
 	export let name: string;
 	export let image: string;
 	export let description: string;
 	export let url: string;
-	export let tags: {
-		name: string;
-		color: {
-			color: Color;
-		};
-	}[];
+	export let tags: PartialSelectResponse[];
+	[];
 </script>
 
 <article
@@ -30,7 +26,7 @@
 			</p>
 			<div class="w-full text-white text-xs flex flex-wrap gap-x-2 gap-y-2 mt-auto">
 				{#each tags as tag}
-					<Badge color={tag.color.color}>#{tag.name}</Badge>
+					<Badge color={tag.color}>#{tag.name}</Badge>
 				{/each}
 			</div>
 		</section>

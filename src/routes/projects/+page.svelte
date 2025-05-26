@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { type Color } from '$lib/types/colors';
+	import type { PageObjectResponse } from '@notionhq/client';
 	import CardLayout from '../../components/home/card-layout.svelte';
 	import MainSectionLayout from '../../components/home/main-section-layout.svelte';
 	import PaginationContainer from '../../components/home/pagination-container.svelte';
@@ -26,17 +27,23 @@
 	}
 
 	// Helper function to safely access properties
-	function getProjectData(project: any) {
+	function getProjectData(project: PageObjectResponse & { images: string[] }) {
 		const props = project.properties;
 		return {
-			name: (props.Name as any)?.title?.[0]?.plain_text || '',
-			description: (props.Description as any)?.rich_text?.[0]?.plain_text || '',
+			// name: props.Name?.title?.[0]?.plain_text || '',
+			name: props.Name && 'title' in props.Name ? props.Name.title?.[0]?.plain_text : '',
+			description:
+				props.Description && 'rich_text' in props.Description
+					? props.Description.rich_text?.[0]?.plain_text
+					: 'No Description',
 			tags:
-				(props.Tags as any)?.multi_select?.map((tag: any) => ({
-					name: tag.name,
-					color: tag as unknown as { color: Color }
-				})) || [],
-			url: (props.URL as any)?.url || '#',
+				props.Tags && 'multi_select' in props.Tags
+					? props.Tags.multi_select?.map((tag) => ({
+							name: tag.name,
+							color: tag.color
+						}))
+					: [],
+			url: (props.URL && 'url' in props.URL ? props.URL.url : '#') ?? '#',
 			image: project?.images?.[0]
 		};
 	}

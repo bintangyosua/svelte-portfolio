@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { type Color } from '$lib/types/colors';
+	import type { PageObjectResponse } from '@notionhq/client';
 	import MainSectionLayout from '../../components/home/main-section-layout.svelte';
 	import PaginationContainer from '../../components/home/pagination-container.svelte';
 	import PostCard from '../../components/home/post-card.svelte';
@@ -36,22 +37,33 @@
 	}
 
 	// Helper function to safely access properties
-	function getPostData(post: any) {
+	function getPostData(post: PageObjectResponse) {
 		const props = post.properties;
 		return {
-			title: (props.Title as any)?.title?.[0]?.plain_text || '',
-			publicationDate: (props['Publication Date'] as any)?.date?.start || '',
-			slug: (props.Slug as any)?.rich_text?.[0]?.plain_text || '',
+			title: props.Title && 'title' in props.Title ? props.Title.title?.[0]?.plain_text : '',
+			publicationDate:
+				props['Publication Date'] && 'date' in props['Publication Date']
+					? props['Publication Date'].date?.start
+					: '',
+			slug: props.Slug && 'rich_text' in props.Slug ? props.Slug.rich_text?.[0]?.plain_text : '',
 			category: {
-				name: (props.Category as any)?.select?.name || '',
-				color: (props.Category as any)?.select?.color || ''
+				name:
+					props.Category && 'select' in props.Category ? (props.Category.select?.name ?? '') : '',
+				color: (props.Category && 'select' in props.Category
+					? (props.Category.select?.color ?? '')
+					: '') as Color
 			},
 			tags:
-				(props.Tags as any)?.multi_select?.map((tag: any) => ({
-					name: tag.name,
-					color: tag.color as unknown as Color
-				})) || [],
-			image: post.cover?.file?.url ?? post.cover?.external?.url
+				props.Tags && 'multi_select' in props.Tags
+					? props.Tags.multi_select?.map((tag) => ({
+							name: tag.name,
+							color: tag.color
+						}))
+					: [],
+			image:
+				post.cover && 'file' in post.cover
+					? post.cover.file?.url
+					: (post.cover?.external?.url ?? '')
 		};
 	}
 </script>
@@ -76,7 +88,7 @@
 		<PostCard
 			title={postData.title}
 			category={postData.category}
-			publicationDate={postData.publicationDate}
+			publicationDate={postData.publicationDate ?? ''}
 			slug={postData.slug}
 			tags={postData.tags}
 			image={postData.image}

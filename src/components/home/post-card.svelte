@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { formatDate } from '$lib/date.';
+	import type { PartialSelectResponse } from '$lib/types';
 	import { colorClasses, type Color } from '$lib/types/colors';
 	import Badge from './badge.svelte';
 
@@ -9,12 +10,9 @@
 	export let category: {
 		name: string;
 		color: Color;
-	};
+	} | null = null;
 	export let image: string;
-	export let tags: {
-		name: string;
-		color: Color;
-	}[];
+	export let tags: PartialSelectResponse[];
 </script>
 
 <article
@@ -27,7 +25,7 @@
 			alt="Next.js Full Course"
 		/>
 		<section class="p-5 flex flex-col gap-5 flex-grow">
-			{#if category.name}
+			{#if category}
 				<Badge color={category.color}>{category.name}</Badge>
 			{/if}
 			<h5 class="text-xl font-bold text-white w-full">{title}</h5>

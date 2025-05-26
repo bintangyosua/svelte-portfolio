@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { PartialSelectResponse } from '$lib/types';
 	import { colorClasses, type Color } from '$lib/types/colors';
 	import Badge from './badge.svelte';
 
@@ -7,10 +8,7 @@
 	export let abstract: string;
 	export let releaseDate: string;
 	// export let publishedDate: string;
-	export let tags: {
-		name: string;
-		color: Color;
-	}[] = [];
+	export let tags: PartialSelectResponse[] = [];
 </script>
 
 <article

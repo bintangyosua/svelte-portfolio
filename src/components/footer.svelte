@@ -19,7 +19,7 @@
 		</div>
 		<data
 			>Need help? Email <a
-				href="mailto:itzbintangyosua@gmail"
+				href="mailto:itzbintangyosua@gmail.com"
 				class="text-blue hover:brightness-150">itzbintangyosua@gmail.com</a
 			></data
 		>
