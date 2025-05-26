@@ -30,7 +30,7 @@
 			{/if}
 			<h5 class="text-xl font-bold text-white w-full">{title}</h5>
 			<div class="flex items-center gap-x-2 -mt-3">
-				<span>{formatDate(publicationDate)}</span>
+				{formatDate(publicationDate)}
 			</div>
 			<div class="w-full text-white text-xs flex flex-wrap gap-x-2 gap-y-2 mt-auto">
 				{#if tags.length >= 0}
