@@ -12,7 +12,7 @@
 	export let wrapperClass: string = ''; // For items wrapper
 	export let paginationClass: string = 'flex items-center justify-center space-x-2 mt-8';
 	export let pageButtonClass: string =
-		'bg-gray font-bold text-black brightness-120 hover:brightness-100 hover:cursor-pointer';
+		'bg-gray font-bold text-black hover:bg-gray-50 hover:cursor-pointer';
 	export let activePageClass: string =
 		'bg-red font-bold text-black hover:brightness-120 hover:cursor-pointer';
 	export let navButtonClass: string =
