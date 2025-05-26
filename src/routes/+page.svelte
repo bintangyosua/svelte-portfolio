@@ -4,6 +4,7 @@
 	import CardLayout from '../components/home/card-layout.svelte';
 	import MainSectionLayout from '../components/home/main-section-layout.svelte';
 	import PublicationLayout from '../components/home/publication-layout.svelte';
+	import ScrollShow from '../components/scroll-show.svelte';
 
 	export let data;
 </script>
@@ -66,20 +67,22 @@
 		{#if data.publications.length === 0}
 			<p>Publications not found</p>
 		{:else}
-			{#each data.publications as page}
-				{#if page?.properties?.Title?.type === 'title' && page?.properties?.Title?.title?.length > 0 && page?.properties?.URL?.type === 'url' && page?.properties?.URL?.url && page?.properties?.['Release Date']?.type === 'date' && page?.properties?.['Release Date']?.date?.start && page?.properties?.Abstract?.type === 'rich_text' && page?.properties?.Tags?.type === 'multi_select'}
-					<PublicationLayout
-						releaseDate={page.properties['Release Date'].date.start}
-						title={page.properties.Title.title[0].plain_text}
-						abstract={page.properties.Abstract.rich_text[0].plain_text}
-						url={page.properties.URL.url}
-						tags={page?.properties.Tags.multi_select.map((tag) => ({
-							name: tag.name,
-							color: tag as unknown as { color: Color }
-						}))}
-					></PublicationLayout>
-				{/if}
-			{/each}
+			<div class="flex flex-col gap-8">
+				{#each data.publications as page}
+					{#if page?.properties?.Title?.type === 'title' && page?.properties?.Title?.title?.length > 0 && page?.properties?.URL?.type === 'url' && page?.properties?.URL?.url && page?.properties?.['Release Date']?.type === 'date' && page?.properties?.['Release Date']?.date?.start && page?.properties?.Abstract?.type === 'rich_text' && page?.properties?.Tags?.type === 'multi_select'}
+						<PublicationLayout
+							releaseDate={page.properties['Release Date'].date.start}
+							title={page.properties.Title.title[0].plain_text}
+							abstract={page.properties.Abstract.rich_text[0].plain_text}
+							url={page.properties.URL.url}
+							tags={page?.properties.Tags.multi_select.map((tag) => ({
+								name: tag.name,
+								color: tag as unknown as { color: Color }
+							}))}
+						></PublicationLayout>
+					{/if}
+				{/each}
+			</div>
 		{/if}
 	</MainSectionLayout>
 </section>
