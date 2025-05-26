@@ -3,7 +3,7 @@ export const colorClasses = {
 	purple: 'bg-purple',
 	red: 'bg-red',
 	yellow: 'bg-yellow text-background',
-	blue: 'bg-blue',
+	blue: 'bg-blue text-white',
 	gray: 'bg-gray/40',
 	brown: 'bg-brown',
 	pink: 'bg-pink text-background',
