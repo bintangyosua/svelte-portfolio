@@ -20,7 +20,14 @@
 	<a href={url} class="no-underline flex flex-col h-full" target="_blank">
 		<section class="p-5 flex flex-col gap-5 flex-grow">
 			<h5 class="text-md sm:text-lg md:text-xl font-bold text-white w-full">{title}</h5>
-			<div class="-mt-4">{new Date(releaseDate).toDateString()}</div>
+			<div class="-mt-4">
+				{new Date(releaseDate).toLocaleDateString('en-US', {
+					weekday: 'long',
+					year: 'numeric',
+					month: 'short',
+					day: 'numeric'
+				})}
+			</div>
 			<p class="text-gray3 font-semibold flex-grow text-justify line-clamp-3">
 				{abstract}
 			</p>

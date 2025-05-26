@@ -2,21 +2,45 @@
 	import { type Color } from '$lib/types/colors';
 	import MainSectionLayout from '../../components/home/main-section-layout.svelte';
 	import PublicationLayout from '../../components/home/publication-layout.svelte';
+	import UnlimitedScroll from '../../components/home/unlimited-scroll.svelte';
 
 	export let data;
 
-	// Pagination state
-	let itemsPerPage = 3; // Show 5 publications initially
-	let currentPage = 1;
+	// Simpler inline approach - filter and cast in one step
+	$: validPublications = data.pages.filter((page) => {
+		const props = page?.properties;
 
-	// Calculate displayed items
-	$: displayedItems = data.pages.slice(0, currentPage * itemsPerPage);
-	$: hasMore = displayedItems.length < data.pages.length;
-	$: remainingItems = data.pages.length - displayedItems.length;
+		return (
+			props?.Title?.type === 'title' &&
+			props?.Title?.title?.length > 0 &&
+			props?.URL?.type === 'url' &&
+			props?.URL?.url &&
+			props?.['Release Date']?.type === 'date' &&
+			props?.['Release Date']?.date?.start &&
+			props?.Abstract?.type === 'rich_text' &&
+			props?.Abstract?.rich_text?.length > 0 &&
+			props?.Tags?.type === 'multi_select'
+		);
+	});
 
-	// Load more function
-	function loadMore() {
-		currentPage += 1;
+	function handleLoadMore(event: { detail: any }) {
+		console.log('Loading more publications:', event.detail);
+	}
+
+	// Helper function to safely access properties
+	function getPublicationData(page: any) {
+		const props = page.properties;
+		return {
+			releaseDate: (props['Release Date'] as any)?.date?.start || '',
+			title: (props.Title as any)?.title?.[0]?.plain_text || '',
+			abstract: (props.Abstract as any)?.rich_text?.[0]?.plain_text || '',
+			url: (props.URL as any)?.url || '',
+			tags:
+				(props.Tags as any)?.multi_select?.map((tag: any) => ({
+					name: tag.name,
+					color: tag as unknown as { color: Color }
+				})) || []
+		};
 	}
 </script>
 
@@ -24,46 +48,36 @@
 	<title>Publications</title>
 	<meta name="description" content="Publications Page" />
 </svelte:head>
+
 <MainSectionLayout
 	title="PUBLICATIONS"
 	description="A curated collection of research publications and academic contributions, each reflecting my commitment to solving real-world problems through rigorous analysis, thoughtful design, and data-driven insights."
 >
-	{#if data.pages.length === 0}
-		<p>Projects not found</p>
-	{:else}
-		{#each displayedItems as page (page.id)}
-			{#if page?.properties?.Title?.type === 'title' && page?.properties?.Title?.title?.length > 0 && page?.properties?.URL?.type === 'url' && page?.properties?.URL?.url && page?.properties?.['Release Date']?.type === 'date' && page?.properties?.['Release Date']?.date?.start && page?.properties?.Abstract?.type === 'rich_text' && page?.properties?.Tags?.type === 'multi_select'}
-				<PublicationLayout
-					releaseDate={page.properties['Release Date'].date.start}
-					title={page.properties.Title.title[0].plain_text}
-					abstract={page.properties.Abstract.rich_text[0].plain_text}
-					url={page.properties.URL.url}
-					tags={page?.properties.Tags.multi_select.map((tag) => ({
-						name: tag.name,
-						color: tag as unknown as { color: Color }
-					}))}
-				></PublicationLayout>
-			{/if}
-		{/each}
+	<UnlimitedScroll
+		items={validPublications}
+		itemsPerPage={3}
+		loadMoreText="Load More Publications"
+		wrapperClass="flex flex-col gap-6"
+		on:loadMore={handleLoadMore}
+		let:item={page}
+	>
+		{@const pubData = getPublicationData(page)}
+		<PublicationLayout
+			releaseDate={pubData.releaseDate}
+			title={pubData.title}
+			abstract={pubData.abstract}
+			url={pubData.url}
+			tags={pubData.tags}
+		/>
 
-		<!-- Load More Button -->
-		{#if hasMore}
-			<div class="flex justify-center my-8">
-				<button
-					class="bg-gradient-to-r from-blue to-purple hover:from-blue hover:brightness-110 hover:to-purple text-white font-medium py-3 px-6 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 active:translate-y-0 hover:cursor-pointer"
-					on:click={loadMore}
-					type="button"
-				>
-					Load More ({remainingItems} remaining)
-				</button>
-			</div>
-		{/if}
+		<svelte:fragment slot="empty">
+			<p>Publications not found</p>
+		</svelte:fragment>
 
-		<!-- Show total count -->
-		<div class="text-center mt-4">
+		<svelte:fragment slot="counter" let:displayedCount let:totalCount>
 			<p class="text-gray-600 text-sm">
-				Showing {displayedItems.length} of {data.pages.length} publications
+				Showing {displayedCount} of {totalCount} publications
 			</p>
-		</div>
-	{/if}
+		</svelte:fragment>
+	</UnlimitedScroll>
 </MainSectionLayout>
