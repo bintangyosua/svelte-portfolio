@@ -75,7 +75,7 @@
 
 <MainSectionLayout
 	title="BLOG"
-	description="A showcase of my hands-on creations—where ideas meet execution to solve real-world problems."
+	description="Where ideas take shape in words—exploring creativity, code, and problem-solving through every post."
 >
 	<PaginationContainer
 		items={validPosts}

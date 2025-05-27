@@ -63,8 +63,9 @@ button {
 }
 
 .notion img {
+	@apply w-full md:w-4/5;
 	margin: 20px auto;
-	max-width: 50%;
+	/* max-width: 100%; */
 }
 
 .notion p {
@@ -73,6 +74,7 @@ button {
 }
 
 .notion blockquote {
+	@apply my-4 text-background/75;
 	line-height: 2;
 	margin: 20px auto;
 	display: flex;
@@ -97,11 +99,11 @@ ol {
 }
 
 .notion h1 {
-	@apply text-3xl font-semibold my-4 text-left;
+	@apply text-2xl md:text-3xl font-semibold my-4 text-left;
 }
 
 .notion h2 {
-	@apply text-2xl font-semibold mt-8 my-4;
+	@apply text-xl md:text-2xl font-semibold mt-8 my-4;
 }
 
 .notion h3 {
