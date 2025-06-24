@@ -1,5 +1,6 @@
 <script lang="ts">
 	import DiscordIcon from './icons/discord-icon.svelte';
+	import DockerIcon from './icons/docker-icon.svelte';
 	import GithubIcon from './icons/github-icon.svelte';
 	import HuggingfaceIcon from './icons/huggingface-icon.svelte';
 	import InstagramIcon from './icons/instagram-icon.svelte';
@@ -23,6 +24,9 @@
 				class="text-blue hover:brightness-150">itzbintangyosua@gmail.com</a
 			></data
 		>
+
+		<div class="font-mochiy text-sm">HELPFUL LINKS</div>
+
 		<div class="flex gap-3 items-center my-2">
 			<a href="https://github.com/bintangyosua"><GithubIcon color="currentColor" /></a>
 			<a href="https://www.linkedin.com/in/bintangyosua"><LinkedinIcon color="currentColor" /></a>
@@ -32,6 +36,7 @@
 			<a href="https://public.tableau.com/app/profile/panky.bintang.pradana.yosua/vizzes"
 				><TableauIcon color="currentColor" /></a
 			>
+			<a href="https://hub.docker.com/u/skyfellinlove"><DockerIcon color="currentColor" /></a>
 		</div>
 		<a href="https://kit.svelte.dev" class="text-xs"
 			>© {year} Bintang Yosua. All Rights Reserved.</a
