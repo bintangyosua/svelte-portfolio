@@ -35,7 +35,7 @@
 				></a
 			>
 			<a href={config.resume} target="_blank"
-				><button class="bg-blue text-background font-[900] hover:bg-green/80 hover:cursor-pointer"
+				><button class="bg-blue text-background font-[900] hover:bg-blue/80 hover:cursor-pointer"
 					>RESUME</button
 				></a
 			>
