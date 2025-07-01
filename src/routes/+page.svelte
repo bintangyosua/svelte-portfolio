@@ -28,11 +28,18 @@
 			and a keen interest in
 			<span class="font-bold text-red">web development and machine learning</span>
 		</p>
-		<a href={config.mailto}
-			><button class="bg-green text-background font-[900] hover:bg-green/80 hover:cursor-pointer"
-				>CONTACT ME</button
-			></a
-		>
+		<div class="flex flex-wrap gap-4">
+			<a href={config.mailto}
+				><button class="bg-green text-background font-[900] hover:bg-green/80 hover:cursor-pointer"
+					>CONTACT ME</button
+				></a
+			>
+			<a href={config.resume} target="_blank"
+				><button class="bg-blue text-background font-[900] hover:bg-green/80 hover:cursor-pointer"
+					>RESUME</button
+				></a
+			>
+		</div>
 	</div>
 
 	<MainSectionLayout
@@ -42,20 +49,24 @@
 		viewAll="/projects"
 	>
 		<CardGridLayout>
-			{#each data.projects as project}
-				{#if project?.properties.Name.type === 'title' && project?.properties.Description.type === 'rich_text' && project?.properties.Tags.type === 'multi_select' && project?.properties.URL.type === 'url'}
-					<CardLayout
-						name={project?.properties.Name.title[0].plain_text}
-						description={project?.properties.Description.rich_text[0].plain_text}
-						tags={project?.properties.Tags.multi_select.map((tag) => ({
-							name: tag.name,
-							color: tag.color
-						}))}
-						image={project?.images[0]}
-						url={project?.properties.URL.url ?? '#'}
-					/>
-				{/if}
-			{/each}
+			{#if data.projects.length === 0}
+				<p>Projects not found</p>
+			{:else}
+				{#each data.projects as project}
+					{#if project?.properties.Name.type === 'title' && project?.properties.Description.type === 'rich_text' && project?.properties.Tags.type === 'multi_select' && project?.properties.URL.type === 'url'}
+						<CardLayout
+							name={project?.properties.Name.title[0].plain_text}
+							description={project?.properties.Description.rich_text[0].plain_text}
+							tags={project?.properties.Tags.multi_select.map((tag) => ({
+								name: tag.name,
+								color: tag.color
+							}))}
+							image={project?.images[0]}
+							url={project?.properties.URL.url ?? '#'}
+						/>
+					{/if}
+				{/each}
+			{/if}
 		</CardGridLayout>
 	</MainSectionLayout>
 

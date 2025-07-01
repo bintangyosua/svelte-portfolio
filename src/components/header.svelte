@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/state';
 
-	const navItems = [
+	const navItems: {
+		href: string;
+		label: string;
+		target?: string;
+	}[] = [
 		{ href: '/', label: 'Home' },
 		{ href: '/blog', label: 'Blog' },
 		{ href: '/projects', label: 'Projects' },
 		{ href: '/publications', label: 'Publications' }
+		// { href: 'https://cv.bintangyosua.my.id', label: 'CV', target: '_blank' }
 	];
 </script>
 
@@ -21,10 +26,10 @@
 						>
 					</h1>
 				</a>
-				<ul class="flex items-center gap-3 sm:gap-4 md:gap-5 text-lg">
+				<ul class="flex flex-wrap items-center gap-3 gap-y-0 sm:gap-4 md:gap-5 text-lg">
 					{#each navItems as item}
 						<li>
-							<a href={item.href}>
+							<a href={item.href} target={item.target}>
 								<span
 									class={`normal-case text-lg ${page.url.pathname === item.href ? 'text-blue hover:text-blue hover:brightness-150' : 'hover:text-white'}`}
 								>
