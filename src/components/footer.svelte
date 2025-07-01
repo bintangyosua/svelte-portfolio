@@ -8,38 +8,70 @@
 	import TableauIcon from './icons/tableau-icon.svelte';
 
 	const year = new Date().getFullYear();
+
+	const socialMedia = [
+		{
+			name: 'Github',
+			url: 'https://github.com/bintangyosua',
+			icon: GithubIcon
+		},
+		{
+			name: 'Linkedin',
+			url: 'https://www.linkedin.com/in/bintangyosua',
+			icon: LinkedinIcon
+		},
+		{
+			name: 'Discord',
+			url: 'https://discord.gg/uYpcJcpxgv',
+			icon: DiscordIcon
+		},
+		{
+			name: 'Instagram',
+			url: 'https://instagram.com/itzbintangyosua',
+			icon: InstagramIcon
+		},
+		{
+			name: 'Huggingface',
+			url: 'https://huggingface.co/bintangyosua',
+			icon: HuggingfaceIcon
+		},
+		{
+			name: 'Tableau',
+			url: 'https://public.tableau.com/app/profile/panky.bintang.pradana.yosua/vizzes',
+			icon: TableauIcon
+		},
+		{
+			name: 'Docker',
+			url: 'https://hub.docker.com/u/skyfellinlove',
+			icon: DockerIcon
+		}
+	];
 </script>
 
-<footer class="p-6 max-w-8xl w-fuil mx-auto font-semibold mt-10">
+<footer class="p-6 max-w-8xl w-full mx-auto font-semibold mt-10">
 	<div class="text-center flex items-center gap-3 w-full justify-center flex-col">
 		<div>
 			<span>Find an issue with this page?</span>
-			<a href="https://github.com/bintangyosua" class="text-blue hover:brightness-150"
-				>Fix it on GitHub</a
-			>
+			<a href="https://github.com/bintangyosua" class="text-blue hover:brightness-150">
+				Fix it on GitHub
+			</a>
 		</div>
-		<data
-			>Need help? Email <a
-				href="mailto:itzbintangyosua@gmail.com"
-				class="text-blue hover:brightness-150">itzbintangyosua@gmail.com</a
-			></data
-		>
-
+		<div>
+			Need help? Email
+			<a href="mailto:itzbintangyosua@gmail.com" class="text-blue hover:brightness-150">
+				itzbintangyosua@gmail.com
+			</a>
+		</div>
 		<div class="font-mochiy text-sm">HELPFUL LINKS</div>
-
 		<div class="flex gap-3 items-center my-2">
-			<a href="https://github.com/bintangyosua"><GithubIcon color="currentColor" /></a>
-			<a href="https://www.linkedin.com/in/bintangyosua"><LinkedinIcon color="currentColor" /></a>
-			<a href="https://discord.gg/uYpcJcpxgv"><DiscordIcon color="currentColor" /></a>
-			<a href="https://instagram.com/itzbintangyosua"><InstagramIcon color="currentColor" /></a>
-			<a href="https://huggingface.co/bintangyosua"><HuggingfaceIcon color="currentColor" /></a>
-			<a href="https://public.tableau.com/app/profile/panky.bintang.pradana.yosua/vizzes"
-				><TableauIcon color="currentColor" /></a
-			>
-			<a href="https://hub.docker.com/u/skyfellinlove"><DockerIcon color="currentColor" /></a>
+			{#each socialMedia as { url, icon, name }}
+				<a href={url} class="flex items-center" aria-label={name} target="_blank">
+					<svelte:component this={icon} color="currentColor" />
+				</a>
+			{/each}
 		</div>
-		<a href="https://kit.svelte.dev" class="text-xs"
-			>© {year} Bintang Yosua. All Rights Reserved.</a
-		>
+		<div class="text-xs">
+			© {year} Bintang Yosua. All Rights Reserved.
+		</div>
 	</div>
 </footer>
