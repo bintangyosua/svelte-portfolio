@@ -47,11 +47,10 @@
 		title="PROJECTS"
 		description="A showcase of my hands-on creations—where ideas meet execution to solve real-world problems."
 		viewAll="/projects"
-	>
-		<CardGridLayout>
-			{#if data.projects.length === 0}
-				<p>Projects not found</p>
-			{:else}
+		>{#if data.projects.length === 0}
+			<p class="text-center">Projects not found</p>
+		{:else}
+			<CardGridLayout>
 				{#each data.projects as project}
 					{#if project?.properties.Name.type === 'title' && project?.properties.Description.type === 'rich_text' && project?.properties.Tags.type === 'multi_select' && project?.properties.URL.type === 'url'}
 						<CardLayout
@@ -66,8 +65,8 @@
 						/>
 					{/if}
 				{/each}
-			{/if}
-		</CardGridLayout>
+			</CardGridLayout>
+		{/if}
 	</MainSectionLayout>
 
 	<MainSectionLayout
