@@ -151,8 +151,8 @@
 		}
 		// Dinding kanan dihilangkan - blok bisa keluar ke kanan
 
-		// Add trail point every few frames (when red block is moving)
-		if (Math.abs(block2.vx) > 0.1) {
+		// Add trail point every few frames (when any block is moving)
+		if (Math.abs(block1.vx) > 0.1 || Math.abs(block2.vx) > 0.1) {
 			trailPoints.push({
 				x: Date.now(), // Use timestamp for smoother trail
 				block1X: block1.x + block1.width / 2,
@@ -164,7 +164,6 @@
 				trailPoints.shift();
 			}
 		}
-
 		drawScene();
 
 		// Simulasi terus berjalan tanpa berhenti otomatis
@@ -193,22 +192,73 @@
 		ctx.lineTo(0, 300);
 		ctx.stroke();
 
-		// Draw blocks
+		// Draw blocks - always draw them even if outside canvas bounds
+		// Block 1 (blue)
 		ctx.fillStyle = block1.color;
 		ctx.fillRect(block1.x, block1.y, block1.width, block1.height);
 
-		ctx.fillStyle = block2.color;
-		ctx.fillRect(block2.x, block2.y, block2.width, block2.height);
-
-		// Draw mass labels dengan warna yang kontras
-		ctx.fillStyle = '#b2becd'; // gray dari app.css untuk text
+		// Draw mass label for block1
+		ctx.fillStyle = '#b2becd';
 		ctx.font = 'bold 12px Arial';
 		ctx.textAlign = 'center';
 		ctx.fillText(`${block1.mass}kg`, block1.x + block1.width / 2, block1.y + block1.height / 2 + 4);
+
+		// Block 2 (red)
+		ctx.fillStyle = block2.color;
+		ctx.fillRect(block2.x, block2.y, block2.width, block2.height);
+
+		// Draw mass label for block2
+		ctx.fillStyle = '#b2becd';
+		ctx.font = 'bold 12px Arial';
+		ctx.textAlign = 'center';
 		ctx.fillText(`${block2.mass}kg`, block2.x + block2.width / 2, block2.y + block2.height / 2 + 4);
+
+		// Draw position indicators for blocks outside canvas
+		drawOffScreenIndicators();
 
 		// Draw trail visualization di bawah simulasi
 		drawTrail();
+	}
+
+	function drawOffScreenIndicators() {
+		// Draw arrows or indicators for blocks that are off-screen
+		ctx.fillStyle = '#b2becd';
+		ctx.font = '10px Arial';
+		ctx.textAlign = 'center';
+
+		// Block 1 off-screen indicator
+		if (block1.x + block1.width < 0) {
+			// Block1 is to the left of canvas
+			ctx.fillStyle = block1.color;
+			ctx.fillRect(10, 50, 15, 15);
+			ctx.fillStyle = '#b2becd';
+			ctx.fillText('←', 17, 45);
+			ctx.fillText(`${block1.mass}kg`, 17, 75);
+		} else if (block1.x > canvas.width) {
+			// Block1 is to the right of canvas
+			ctx.fillStyle = block1.color;
+			ctx.fillRect(canvas.width - 25, 50, 15, 15);
+			ctx.fillStyle = '#b2becd';
+			ctx.fillText('→', canvas.width - 17, 45);
+			ctx.fillText(`${block1.mass}kg`, canvas.width - 17, 75);
+		}
+
+		// Block 2 off-screen indicator
+		if (block2.x + block2.width < 0) {
+			// Block2 is to the left of canvas
+			ctx.fillStyle = block2.color;
+			ctx.fillRect(10, 80, 15, 15);
+			ctx.fillStyle = '#b2becd';
+			ctx.fillText('←', 17, 105);
+			ctx.fillText(`${block2.mass}kg`, 17, 115);
+		} else if (block2.x > canvas.width) {
+			// Block2 is to the right of canvas
+			ctx.fillStyle = block2.color;
+			ctx.fillRect(canvas.width - 25, 80, 15, 15);
+			ctx.fillStyle = '#b2becd';
+			ctx.fillText('→', canvas.width - 17, 105);
+			ctx.fillText(`${block2.mass}kg`, canvas.width - 17, 115);
+		}
 	}
 
 	function drawTrail() {
@@ -228,51 +278,79 @@
 		ctx.stroke();
 		ctx.setLineDash([]); // Reset dash
 
-		// Calculate scale for trail
-		const minX = Math.min(...trailPoints.map((p) => Math.min(p.block1X, p.block2X)));
-		const maxX = Math.max(...trailPoints.map((p) => Math.max(p.block1X, p.block2X)));
-		const range = Math.max(maxX - minX, 200); // Minimum range
+		// Calculate scale for trail - use actual position progression
+		const allPositions = trailPoints.flatMap((p) => [p.block1X, p.block2X]);
+		const minX = Math.min(...allPositions);
+		const maxX = Math.max(...allPositions);
+		const range = Math.max(maxX - minX, 300); // Minimum range increased
 
 		// Draw trail points for both blocks
 		trailPoints.forEach((point, index) => {
 			const alpha = 0.3 + (index / trailPoints.length) * 0.7; // Fade older points
 
-			// Scale positions to trail width
-			const block1TrailX = trailStartX + ((point.block1X - minX) / range) * trailWidth;
-			const block2TrailX = trailStartX + ((point.block2X - minX) / range) * trailWidth;
+			// Scale positions to trail width - ensure proper mapping
+			const block1TrailX =
+				trailStartX +
+				Math.max(0, Math.min(trailWidth, ((point.block1X - minX) / range) * trailWidth));
+			const block2TrailX =
+				trailStartX +
+				Math.max(0, Math.min(trailWidth, ((point.block2X - minX) / range) * trailWidth));
 
-			// Draw block1 trail point (blue)
-			ctx.fillStyle = `rgba(59, 110, 193, ${alpha})`; // blue with alpha
-			ctx.beginPath();
-			ctx.arc(block1TrailX, trailY - 10, 3, 0, 2 * Math.PI);
-			ctx.fill();
+			// Draw block1 trail point (blue) - hanya jika dalam range yang masuk akal
+			if (block1TrailX >= trailStartX && block1TrailX <= trailStartX + trailWidth) {
+				ctx.fillStyle = `rgba(59, 110, 193, ${alpha})`; // blue with alpha
+				ctx.beginPath();
+				ctx.arc(block1TrailX, trailY - 10, 3, 0, 2 * Math.PI);
+				ctx.fill();
+			}
 
-			// Draw block2 trail point (red)
-			ctx.fillStyle = `rgba(239, 68, 68, ${alpha})`; // red with alpha
-			ctx.beginPath();
-			ctx.arc(block2TrailX, trailY + 10, 3, 0, 2 * Math.PI);
-			ctx.fill();
+			// Draw block2 trail point (red) - hanya jika dalam range yang masuk akal
+			if (block2TrailX >= trailStartX && block2TrailX <= trailStartX + trailWidth) {
+				ctx.fillStyle = `rgba(239, 68, 68, ${alpha})`; // red with alpha
+				ctx.beginPath();
+				ctx.arc(block2TrailX, trailY + 10, 3, 0, 2 * Math.PI);
+				ctx.fill();
+			}
 
 			// Connect points with lines
 			if (index > 0) {
 				const prevPoint = trailPoints[index - 1];
-				const prevBlock1X = trailStartX + ((prevPoint.block1X - minX) / range) * trailWidth;
-				const prevBlock2X = trailStartX + ((prevPoint.block2X - minX) / range) * trailWidth;
+				const prevBlock1X =
+					trailStartX +
+					Math.max(0, Math.min(trailWidth, ((prevPoint.block1X - minX) / range) * trailWidth));
+				const prevBlock2X =
+					trailStartX +
+					Math.max(0, Math.min(trailWidth, ((prevPoint.block2X - minX) / range) * trailWidth));
 
 				// Blue line for block1
-				ctx.strokeStyle = `rgba(59, 110, 193, ${alpha * 0.5})`;
-				ctx.lineWidth = 1;
-				ctx.beginPath();
-				ctx.moveTo(prevBlock1X, trailY - 10);
-				ctx.lineTo(block1TrailX, trailY - 10);
-				ctx.stroke();
+				if (
+					block1TrailX >= trailStartX &&
+					prevBlock1X >= trailStartX &&
+					block1TrailX <= trailStartX + trailWidth &&
+					prevBlock1X <= trailStartX + trailWidth
+				) {
+					ctx.strokeStyle = `rgba(59, 110, 193, ${alpha * 0.5})`;
+					ctx.lineWidth = 1;
+					ctx.beginPath();
+					ctx.moveTo(prevBlock1X, trailY - 10);
+					ctx.lineTo(block1TrailX, trailY - 10);
+					ctx.stroke();
+				}
 
 				// Red line for block2
-				ctx.strokeStyle = `rgba(239, 68, 68, ${alpha * 0.5})`;
-				ctx.beginPath();
-				ctx.moveTo(prevBlock2X, trailY + 10);
-				ctx.lineTo(block2TrailX, trailY + 10);
-				ctx.stroke();
+				if (
+					block2TrailX >= trailStartX &&
+					prevBlock2X >= trailStartX &&
+					block2TrailX <= trailStartX + trailWidth &&
+					prevBlock2X <= trailStartX + trailWidth
+				) {
+					ctx.strokeStyle = `rgba(239, 68, 68, ${alpha * 0.5})`;
+					ctx.lineWidth = 1;
+					ctx.beginPath();
+					ctx.moveTo(prevBlock2X, trailY + 10);
+					ctx.lineTo(block2TrailX, trailY + 10);
+					ctx.stroke();
+				}
 			}
 		});
 
