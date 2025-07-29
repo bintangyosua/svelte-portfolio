@@ -467,7 +467,7 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4 p-4">
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4">
 		<p class="m-0 text-sm">
 			<strong class="text-white">Status:</strong>
 			<span class="text-gray">{isRunning ? 'Berjalan' : 'Berhenti'}</span>
