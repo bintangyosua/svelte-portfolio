@@ -10,12 +10,12 @@
 	let mass2 = 1; // kg untuk blok kanan
 	let initialVelocity = 5; // m/s untuk blok kanan
 
-	// Block properties dengan ukuran maksimal 80px
+	// Block properties dengan skala logaritmik untuk massa besar
 	let block1 = {
 		x: 100,
-		y: 300 - Math.min(30 + mass1 * 20, 80), // Posisi pada garis dasar dengan batas maksimal
-		width: Math.min(30 + mass1 * 20, 80), // Ukuran berdasarkan massa dengan batas maksimal 80px
-		height: Math.min(30 + mass1 * 20, 80),
+		y: 300 - Math.min(30 + Math.log10(mass1 + 1) * 20, 80), // Logarithmic scaling
+		width: Math.min(30 + Math.log10(mass1 + 1) * 20, 80),
+		height: Math.min(30 + Math.log10(mass1 + 1) * 20, 80),
 		vx: 0,
 		mass: mass1,
 		color: '#3b6ec1' // blue dari app.css
@@ -23,9 +23,9 @@
 
 	let block2 = {
 		x: 400,
-		y: 300 - Math.min(30 + mass2 * 20, 80), // Posisi pada garis dasar dengan batas maksimal
-		width: Math.min(30 + mass2 * 20, 80), // Ukuran berdasarkan massa dengan batas maksimal 80px
-		height: Math.min(30 + mass2 * 20, 80),
+		y: 300 - Math.min(30 + Math.log10(mass2 + 1) * 20, 80), // Logarithmic scaling
+		width: Math.min(30 + Math.log10(mass2 + 1) * 20, 80),
+		height: Math.min(30 + Math.log10(mass2 + 1) * 20, 80),
 		vx: -initialVelocity,
 		mass: mass2,
 		color: '#ef4444' // red dari app.css
@@ -47,17 +47,17 @@
 	function startSimulation() {
 		if (isRunning) return;
 
-		// Reset blocks dengan ukuran maksimal
+		// Reset blocks dengan skala logaritmik
 		block1.x = 100;
-		block1.width = Math.min(30 + mass1 * 20, 80);
-		block1.height = Math.min(30 + mass1 * 20, 80);
+		block1.width = Math.min(30 + Math.log10(mass1 + 1) * 20, 80);
+		block1.height = Math.min(30 + Math.log10(mass1 + 1) * 20, 80);
 		block1.y = 300 - block1.height;
 		block1.vx = 0;
 		block1.mass = mass1;
 
 		block2.x = 400;
-		block2.width = Math.min(30 + mass2 * 20, 80);
-		block2.height = Math.min(30 + mass2 * 20, 80);
+		block2.width = Math.min(30 + Math.log10(mass2 + 1) * 20, 80);
+		block2.height = Math.min(30 + Math.log10(mass2 + 1) * 20, 80);
 		block2.y = 300 - block2.height;
 		block2.vx = -initialVelocity;
 		block2.mass = mass2;
@@ -81,15 +81,15 @@
 		stopSimulation();
 
 		block1.x = 100;
-		block1.width = Math.min(30 + mass1 * 20, 80);
-		block1.height = Math.min(30 + mass1 * 20, 80);
+		block1.width = Math.min(30 + Math.log10(mass1 + 1) * 20, 80);
+		block1.height = Math.min(30 + Math.log10(mass1 + 1) * 20, 80);
 		block1.y = 300 - block1.height;
 		block1.vx = 0;
 		block1.mass = mass1;
 
 		block2.x = 400;
-		block2.width = Math.min(30 + mass2 * 20, 80);
-		block2.height = Math.min(30 + mass2 * 20, 80);
+		block2.width = Math.min(30 + Math.log10(mass2 + 1) * 20, 80);
+		block2.height = Math.min(30 + Math.log10(mass2 + 1) * 20, 80);
 		block2.y = 300 - block2.height;
 		block2.vx = -initialVelocity;
 		block2.mass = mass2;
@@ -100,73 +100,130 @@
 		drawScene();
 	}
 
+	// Helper functions for collision physics (dari referensi)
+	function checkSpeeds(v1: number, v2: number): boolean {
+		// Simulasi berhenti ketika kedua blok bergerak ke kanan dan blok 2 lebih cepat dari blok 1
+		if (v1 >= 0 && v2 >= 0) {
+			return Math.abs(v2) < Math.abs(v1); // Continue if block1 faster than block2
+		}
+		return true; // Continue in other cases
+	}
+
+	function calculateKineticEnergy(): number {
+		return 0.5 * block1.mass * block1.vx * block1.vx + 0.5 * block2.mass * block2.vx * block2.vx;
+	}
+
+	function calculateMomentum(): number {
+		return block1.mass * block1.vx + block2.mass * block2.vx;
+	}
+
 	function animate() {
 		if (!isRunning) return;
 
-		// Smaller timestep for better precision
-		const timestep = 0.5;
+		// Check stopping condition based on physics (seperti referensi)
+		if (!checkSpeeds(block1.vx, block2.vx)) {
+			stopSimulation();
+			return;
+		}
 
-		// Update positions
-		block1.x += block1.vx * timestep;
-		block2.x += block2.vx * timestep;
+		// High precision timestep untuk akurasi yang lebih baik
+		const timestep = 0.01;
+		let timeRemaining = timestep;
 
-		// Check for collision between blocks (more precise detection)
-		if (block1.x + block1.width > block2.x && block1.x < block2.x + block2.width && !hasCollided) {
-			// Elastic collision calculation
-			const v1 = block1.vx;
-			const v2 = block2.vx;
-			const m1 = block1.mass;
-			const m2 = block2.mass;
+		// Loop untuk handle multiple collisions dalam satu frame
+		while (timeRemaining > 0 && isRunning) {
+			// Calculate time to next collision
+			let timeToCollision = timeRemaining;
+			let collisionType = 'none';
 
-			// Conservation of momentum and energy (perfect elastic collision)
-			const newV1 = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
-			const newV2 = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
+			// Time to block-block collision
+			const relativeVelocity = block1.vx - block2.vx;
+			const distance = block2.x - (block1.x + block1.width);
 
-			block1.vx = newV1;
-			block2.vx = newV2;
-
-			// Separate blocks to prevent overlap
-			const overlap = block1.x + block1.width - block2.x;
-			if (overlap > 0) {
-				block1.x -= overlap / 2;
-				block2.x += overlap / 2;
+			if (relativeVelocity > 0 && distance > 0) {
+				const timeToBlockCollision = distance / relativeVelocity;
+				if (timeToBlockCollision > 0 && timeToBlockCollision < timeToCollision) {
+					timeToCollision = timeToBlockCollision;
+					collisionType = 'blocks';
+				}
 			}
 
-			hasCollided = true;
-			collisionCount++;
-		} else if (block1.x + block1.width < block2.x || block1.x > block2.x + block2.width) {
-			hasCollided = false; // Reset collision flag when blocks are separated
+			// Time to wall collision for block1
+			if (block1.vx < 0) {
+				const timeToWallCollision = -block1.x / block1.vx;
+				if (timeToWallCollision > 0 && timeToWallCollision < timeToCollision) {
+					timeToCollision = timeToWallCollision;
+					collisionType = 'wall1';
+				}
+			}
+
+			// Time to wall collision for block2
+			if (block2.vx < 0) {
+				const timeToWallCollision = -block2.x / block2.vx;
+				if (timeToWallCollision > 0 && timeToWallCollision < timeToCollision) {
+					timeToCollision = timeToWallCollision;
+					collisionType = 'wall2';
+				}
+			}
+
+			// Move blocks to collision point (or end of timestep)
+			block1.x += block1.vx * timeToCollision;
+			block2.x += block2.vx * timeToCollision;
+
+			// Handle collision
+			if (collisionType === 'blocks') {
+				// Perfect elastic collision between blocks
+				const v1 = block1.vx;
+				const v2 = block2.vx;
+				const m1 = block1.mass;
+				const m2 = block2.mass;
+				const totalMass = m1 + m2;
+
+				// Conservation of momentum and energy (dari referensi)
+				block1.vx = ((m1 - m2) * v1 + 2 * m2 * v2) / totalMass;
+				block2.vx = ((m2 - m1) * v2 + 2 * m1 * v1) / totalMass;
+
+				// Ensure exact positioning to prevent overlap
+				block1.x = block2.x - block1.width;
+
+				collisionCount++;
+				hasCollided = true;
+			} else if (collisionType === 'wall1') {
+				// Block1 hits wall - perfect elastic reflection
+				block1.x = 0;
+				block1.vx = -block1.vx;
+				collisionCount++;
+			} else if (collisionType === 'wall2') {
+				// Block2 hits wall - perfect elastic reflection
+				block2.x = 0;
+				block2.vx = -block2.vx;
+				collisionCount++;
+			}
+
+			timeRemaining -= timeToCollision;
+
+			// Safety check to prevent infinite loops
+			if (timeToCollision < 1e-10) {
+				break;
+			}
 		}
 
-		// Boundary collision - hanya dinding kiri (elastic collision, no energy loss)
-		if (block1.x <= 0) {
-			block1.x = 0;
-			block1.vx = -block1.vx; // Perfect elastic collision, no energy loss
-			collisionCount++; // Hitung collision dengan dinding
-		}
-		if (block2.x <= 0) {
-			block2.x = 0;
-			block2.vx = -block2.vx; // Perfect elastic collision, no energy loss
-			collisionCount++; // Hitung collision dengan dinding
-		}
-		// Dinding kanan dihilangkan - blok bisa keluar ke kanan
-
-		// Add trail point every few frames (when any block is moving)
-		if (Math.abs(block1.vx) > 0.1 || Math.abs(block2.vx) > 0.1) {
+		// Add trail points for visualization
+		if (Math.abs(block1.vx) > 0.01 || Math.abs(block2.vx) > 0.01) {
 			trailPoints.push({
-				x: Date.now(), // Use timestamp for smoother trail
+				x: Date.now(),
 				block1X: block1.x + block1.width / 2,
 				block2X: block2.x + block2.width / 2
 			});
 
-			// Keep trail length manageable
 			if (trailPoints.length > maxTrailLength) {
 				trailPoints.shift();
 			}
 		}
+
 		drawScene();
 
-		// Simulasi terus berjalan tanpa berhenti otomatis
+		// Continue animation
 		animationId = requestAnimationFrame(animate);
 	}
 
@@ -366,15 +423,15 @@
 	$: {
 		if (block1) {
 			block1.mass = mass1;
-			block1.width = Math.min(30 + mass1 * 20, 80);
-			block1.height = Math.min(30 + mass1 * 20, 80);
+			block1.width = Math.min(30 + Math.log10(mass1 + 1) * 20, 80);
+			block1.height = Math.min(30 + Math.log10(mass1 + 1) * 20, 80);
 			// Adjust Y position to keep block on ground line (y=300)
 			block1.y = 300 - block1.height;
 		}
 		if (block2) {
 			block2.mass = mass2;
-			block2.width = Math.min(30 + mass2 * 20, 80);
-			block2.height = Math.min(30 + mass2 * 20, 80);
+			block2.width = Math.min(30 + Math.log10(mass2 + 1) * 20, 80);
+			block2.height = Math.min(30 + Math.log10(mass2 + 1) * 20, 80);
 			// Adjust Y position to keep block on ground line (y=300)
 			block2.y = 300 - block2.height;
 		}
@@ -401,7 +458,7 @@
 				type="number"
 				bind:value={mass1}
 				min="0.1"
-				max="10"
+				max="1000"
 				step="0.1"
 				disabled={isRunning}
 				class="p-2 border border-gray/50 rounded bg-background text-gray disabled:bg-gray6 disabled:cursor-not-allowed"
@@ -415,8 +472,8 @@
 				type="number"
 				bind:value={mass2}
 				min="0.1"
-				max="10"
-				step="0.1"
+				max="1000000"
+				step="1"
 				disabled={isRunning}
 				class="p-2 border border-gray/50 rounded bg-background text-gray disabled:bg-gray6 disabled:cursor-not-allowed"
 			/>
@@ -430,9 +487,9 @@
 				id="velocity"
 				type="number"
 				bind:value={initialVelocity}
-				min="1"
-				max="20"
-				step="0.5"
+				min="-50"
+				max="50"
+				step="0.1"
 				disabled={isRunning}
 				class="p-2 border border-gray/50 rounded bg-background text-gray disabled:bg-gray6 disabled:cursor-not-allowed"
 			/>
@@ -467,22 +524,68 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4">
+	<!-- Preset massa untuk menghitung π (seperti referensi 3Blue1Brown) -->
+	<div class="flex flex-wrap gap-2 mb-4">
+		<span class="text-white font-semibold">Preset Massa (untuk π):</span>
+		<button
+			on:click={() => {
+				mass1 = 1;
+				mass2 = 100;
+				initialVelocity = -1;
+			}}
+			disabled={isRunning}
+			class="px-2 py-1 text-xs rounded bg-blue/20 text-blue hover:bg-blue/40 disabled:opacity-50"
+		>
+			π ≈ 3.14 (1kg, 100kg)
+		</button>
+		<button
+			on:click={() => {
+				mass1 = 1;
+				mass2 = 10000;
+				initialVelocity = -1;
+			}}
+			disabled={isRunning}
+			class="px-2 py-1 text-xs rounded bg-blue/20 text-blue hover:bg-blue/40 disabled:opacity-50"
+		>
+			π ≈ 3.141 (1kg, 10⁴kg)
+		</button>
+		<button
+			on:click={() => {
+				mass1 = 1;
+				mass2 = 1000000;
+				initialVelocity = -1;
+			}}
+			disabled={isRunning}
+			class="px-2 py-1 text-xs rounded bg-blue/20 text-blue hover:bg-blue/40 disabled:opacity-50"
+		>
+			π ≈ 3.1415 (1kg, 10⁶kg)
+		</button>
+	</div>
+
+	<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-4">
 		<p class="m-0 text-sm">
 			<strong class="text-white">Status:</strong>
 			<span class="text-gray">{isRunning ? 'Berjalan' : 'Berhenti'}</span>
 		</p>
 		<p class="m-0 text-sm">
-			<strong class="text-white">Jumlah Collision:</strong>
+			<strong class="text-white">Collisions:</strong>
 			<span class="text-purple">{collisionCount}</span>
 		</p>
 		<p class="m-0 text-sm">
-			<strong class="text-white">Kecepatan Blok Kiri:</strong>
-			<span class="text-blue">{block1?.vx.toFixed(2) || 0} m/s</span>
+			<strong class="text-white">V1:</strong>
+			<span class="text-blue">{block1?.vx.toFixed(3) || 0} m/s</span>
 		</p>
 		<p class="m-0 text-sm">
-			<strong class="text-white">Kecepatan Blok Kanan:</strong>
-			<span class="text-red">{block2?.vx.toFixed(2) || 0} m/s</span>
+			<strong class="text-white">V2:</strong>
+			<span class="text-red">{block2?.vx.toFixed(3) || 0} m/s</span>
+		</p>
+		<p class="m-0 text-sm">
+			<strong class="text-white">Energi Kinetik:</strong>
+			<span class="text-green">{isRunning ? calculateKineticEnergy().toFixed(2) : '0.00'} J</span>
+		</p>
+		<p class="m-0 text-sm">
+			<strong class="text-white">Momentum:</strong>
+			<span class="text-orange">{isRunning ? calculateMomentum().toFixed(3) : '0.000'} kg⋅m/s</span>
 		</p>
 	</div>
 
@@ -492,6 +595,37 @@
 		height="400"
 		class="w-full max-w-[600px] h-[400px] rounded-lg block mx-auto mb-8 bg-transparent"
 	></canvas>
+
+	<!-- Informasi edukatif tentang counting π -->
+	<div class="bg-gray6/10 rounded-lg p-4 mb-4">
+		<h3 class="text-white text-lg font-semibold mb-2">💡 Fenomena Counting π</h3>
+		<p class="text-gray text-sm mb-2">
+			Ketika massa blok kedua adalah 100^n kali massa blok pertama (dimana n adalah bilangan bulat),
+			maka jumlah collision akan mendekati π × 10^n!
+		</p>
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+			<div class="bg-blue/10 p-3 rounded">
+				<div class="text-blue font-semibold">Ratio 100:1</div>
+				<div class="text-gray">Collisions ≈ 31 (π × 10¹)</div>
+				<div class="text-gray text-xs">Menghasilkan sekitar 3.1 digit π</div>
+			</div>
+			<div class="bg-blue/10 p-3 rounded">
+				<div class="text-blue font-semibold">Ratio 10,000:1</div>
+				<div class="text-gray">Collisions ≈ 314 (π × 10²)</div>
+				<div class="text-gray text-xs">Menghasilkan sekitar 3.14 digit π</div>
+			</div>
+			<div class="bg-blue/10 p-3 rounded">
+				<div class="text-blue font-semibold">Ratio 1,000,000:1</div>
+				<div class="text-gray">Collisions ≈ 3141 (π × 10³)</div>
+				<div class="text-gray text-xs">Menghasilkan sekitar 3.141 digit π</div>
+			</div>
+		</div>
+		<p class="text-gray text-xs mt-2">
+			<strong>Catatan:</strong> Algoritma ini menggunakan presisi tinggi untuk memastikan akurasi dalam
+			menghitung collision dengan massa yang sangat besar. Berdasarkan penelitian G. Galperin dan dipopulerkan
+			oleh 3Blue1Brown.
+		</p>
+	</div>
 </div>
 
 <style>
