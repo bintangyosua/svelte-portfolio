@@ -35,6 +35,9 @@
 	let isRunning = false;
 	let hasCollided = false;
 	let collisionCount = 0;
+	let finalPhaseStartTime = 0; // Waktu mulai fase final
+	let isInFinalPhase = false; // Flag untuk fase final 5 detik
+	let remainingTime = 5; // Sisa waktu countdown
 
 	// Trail tracking
 	let trailPoints: Array<{ x: number; block1X: number; block2X: number }> = [];
@@ -65,6 +68,9 @@
 
 		hasCollided = false;
 		collisionCount = 0;
+		finalPhaseStartTime = 0;
+		isInFinalPhase = false;
+		remainingTime = 5;
 		trailPoints = []; // Reset trail
 		isRunning = true;
 
@@ -97,6 +103,9 @@
 
 		hasCollided = false;
 		collisionCount = 0;
+		finalPhaseStartTime = 0;
+		isInFinalPhase = false;
+		remainingTime = 5;
 		trailPoints = []; // Reset trail
 		drawScene();
 	}
@@ -122,9 +131,20 @@
 		if (!isRunning) return;
 
 		// Check stopping condition based on physics (seperti referensi)
-		if (!checkSpeeds(block1.vx, block2.vx)) {
-			stopSimulation();
-			return;
+		if (!checkSpeeds(block1.vx, block2.vx) && !isInFinalPhase) {
+			// Mulai fase final 5 detik
+			isInFinalPhase = true;
+			finalPhaseStartTime = Date.now();
+		}
+
+		// Jika dalam fase final, cek apakah sudah 5 detik
+		if (isInFinalPhase) {
+			const elapsedTime = (Date.now() - finalPhaseStartTime) / 1000; // dalam detik
+			remainingTime = Math.max(0, 5 - Math.floor(elapsedTime));
+			if (elapsedTime >= 5) {
+				stopSimulation();
+				return;
+			}
 		}
 
 		// Adaptive timestep berdasarkan kecepatan dan massa
@@ -592,7 +612,22 @@
 	<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-4">
 		<p class="m-0 text-sm">
 			<strong class="text-white">Status:</strong>
-			<span class="text-gray">{isRunning ? 'Berjalan' : 'Berhenti'}</span>
+			<span class="text-gray">
+				{#if isRunning}
+					{#if isInFinalPhase}
+						<span class="text-orange"
+							>Fase Final ({Math.max(
+								0,
+								5 - Math.floor((Date.now() - finalPhaseStartTime) / 1000)
+							)}s)</span
+						>
+					{:else}
+						Berjalan
+					{/if}
+				{:else}
+					Berhenti
+				{/if}
+			</span>
 		</p>
 		<p class="m-0 text-sm">
 			<strong class="text-white">Collisions:</strong>
@@ -624,7 +659,7 @@
 	></canvas>
 
 	<!-- Informasi edukatif tentang counting π -->
-	<div class="bg-gray6/10 rounded-lg p-4 mb-4">
+	<!-- <div class="bg-gray6/10 rounded-lg p-4 mb-4">
 		<h3 class="text-white text-lg font-semibold mb-2">💡 Fenomena Counting π</h3>
 		<p class="text-gray text-sm mb-2">
 			Ketika massa blok kedua adalah 100^n kali massa blok pertama (dimana n adalah bilangan bulat),
@@ -652,7 +687,11 @@
 			menghitung collision dengan massa yang sangat besar. Berdasarkan penelitian G. Galperin dan dipopulerkan
 			oleh 3Blue1Brown.
 		</p>
-	</div>
+		<p class="text-gray text-xs mt-2">
+			<strong>Fase Final:</strong> Simulasi akan menampilkan countdown 5 detik setelah collision terakhir 
+			untuk menunjukkan bahwa blok masih bergerak namun tidak akan collision lagi karena kondisi fisika sudah terpenuhi.
+		</p>
+	</div> -->
 </div>
 
 <style>

@@ -28,6 +28,11 @@
 			and a keen interest in
 			<span class="font-bold text-red">web development and machine learning</span>
 		</p>
+		<p class="mb-6 -mt-5 font-semibold">
+			Visit <a href="/playgrounds/collisions" class="text-white"
+				>Counting π Collisions Physics Simulation</a
+			>
+		</p>
 		<div class="flex flex-wrap gap-4">
 			<a href={config.mailto}
 				><button class="bg-green text-background font-[900] hover:bg-green/80 hover:cursor-pointer"
