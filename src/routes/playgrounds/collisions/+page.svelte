@@ -35,6 +35,10 @@
 	let hasCollided = false;
 	let collisionCount = 0;
 
+	// Trail tracking
+	let trailPoints: Array<{ x: number; block1X: number; block2X: number }> = [];
+	let maxTrailLength = 200; // Maximum number of trail points
+
 	onMount(() => {
 		ctx = canvas.getContext('2d')!;
 		drawScene();
@@ -60,6 +64,7 @@
 
 		hasCollided = false;
 		collisionCount = 0;
+		trailPoints = []; // Reset trail
 		isRunning = true;
 
 		animate();
@@ -91,6 +96,7 @@
 
 		hasCollided = false;
 		collisionCount = 0;
+		trailPoints = []; // Reset trail
 		drawScene();
 	}
 
@@ -145,6 +151,20 @@
 		}
 		// Dinding kanan dihilangkan - blok bisa keluar ke kanan
 
+		// Add trail point every few frames (when red block is moving)
+		if (Math.abs(block2.vx) > 0.1) {
+			trailPoints.push({
+				x: Date.now(), // Use timestamp for smoother trail
+				block1X: block1.x + block1.width / 2,
+				block2X: block2.x + block2.width / 2
+			});
+
+			// Keep trail length manageable
+			if (trailPoints.length > maxTrailLength) {
+				trailPoints.shift();
+			}
+		}
+
 		drawScene();
 
 		// Simulasi terus berjalan tanpa berhenti otomatis
@@ -186,6 +206,82 @@
 		ctx.textAlign = 'center';
 		ctx.fillText(`${block1.mass}kg`, block1.x + block1.width / 2, block1.y + block1.height / 2 + 4);
 		ctx.fillText(`${block2.mass}kg`, block2.x + block2.width / 2, block2.y + block2.height / 2 + 4);
+
+		// Draw trail visualization di bawah simulasi
+		drawTrail();
+	}
+
+	function drawTrail() {
+		if (trailPoints.length < 2) return;
+
+		const trailY = 350; // Position trail below the main simulation
+		const trailStartX = 50;
+		const trailWidth = canvas.width - 100;
+
+		// Draw trail background line
+		ctx.strokeStyle = '#b2becd';
+		ctx.lineWidth = 2;
+		ctx.setLineDash([5, 5]);
+		ctx.beginPath();
+		ctx.moveTo(trailStartX, trailY);
+		ctx.lineTo(trailStartX + trailWidth, trailY);
+		ctx.stroke();
+		ctx.setLineDash([]); // Reset dash
+
+		// Calculate scale for trail
+		const minX = Math.min(...trailPoints.map((p) => Math.min(p.block1X, p.block2X)));
+		const maxX = Math.max(...trailPoints.map((p) => Math.max(p.block1X, p.block2X)));
+		const range = Math.max(maxX - minX, 200); // Minimum range
+
+		// Draw trail points for both blocks
+		trailPoints.forEach((point, index) => {
+			const alpha = 0.3 + (index / trailPoints.length) * 0.7; // Fade older points
+
+			// Scale positions to trail width
+			const block1TrailX = trailStartX + ((point.block1X - minX) / range) * trailWidth;
+			const block2TrailX = trailStartX + ((point.block2X - minX) / range) * trailWidth;
+
+			// Draw block1 trail point (blue)
+			ctx.fillStyle = `rgba(59, 110, 193, ${alpha})`; // blue with alpha
+			ctx.beginPath();
+			ctx.arc(block1TrailX, trailY - 10, 3, 0, 2 * Math.PI);
+			ctx.fill();
+
+			// Draw block2 trail point (red)
+			ctx.fillStyle = `rgba(239, 68, 68, ${alpha})`; // red with alpha
+			ctx.beginPath();
+			ctx.arc(block2TrailX, trailY + 10, 3, 0, 2 * Math.PI);
+			ctx.fill();
+
+			// Connect points with lines
+			if (index > 0) {
+				const prevPoint = trailPoints[index - 1];
+				const prevBlock1X = trailStartX + ((prevPoint.block1X - minX) / range) * trailWidth;
+				const prevBlock2X = trailStartX + ((prevPoint.block2X - minX) / range) * trailWidth;
+
+				// Blue line for block1
+				ctx.strokeStyle = `rgba(59, 110, 193, ${alpha * 0.5})`;
+				ctx.lineWidth = 1;
+				ctx.beginPath();
+				ctx.moveTo(prevBlock1X, trailY - 10);
+				ctx.lineTo(block1TrailX, trailY - 10);
+				ctx.stroke();
+
+				// Red line for block2
+				ctx.strokeStyle = `rgba(239, 68, 68, ${alpha * 0.5})`;
+				ctx.beginPath();
+				ctx.moveTo(prevBlock2X, trailY + 10);
+				ctx.lineTo(block2TrailX, trailY + 10);
+				ctx.stroke();
+			}
+		});
+
+		// Draw labels
+		ctx.fillStyle = '#b2becd';
+		ctx.font = '10px Arial';
+		ctx.textAlign = 'left';
+		ctx.fillText('Blue trail', trailStartX, trailY - 20);
+		ctx.fillText('Red trail', trailStartX, trailY + 30);
 	}
 
 	// Update block properties when inputs change
