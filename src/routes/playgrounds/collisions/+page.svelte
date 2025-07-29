@@ -9,6 +9,7 @@
 	let mass1 = 1; // kg untuk blok kiri
 	let mass2 = 1; // kg untuk blok kanan
 	let initialVelocity = 5; // m/s untuk blok kanan
+	let simulationSpeed = 1; // Multiplier untuk kecepatan simulasi
 
 	// Block properties dengan skala logaritmik untuk massa besar
 	let block1 = {
@@ -126,8 +127,18 @@
 			return;
 		}
 
-		// High precision timestep untuk akurasi yang lebih baik
-		const timestep = 0.01;
+		// Adaptive timestep berdasarkan kecepatan dan massa
+		let baseTimestep = 0.5; // Timestep dasar yang lebih besar
+
+		// Untuk massa yang sangat besar, gunakan timestep yang lebih kecil untuk presisi
+		if (mass2 > 1000) {
+			baseTimestep = 0.1;
+		}
+		if (mass2 > 100000) {
+			baseTimestep = 0.05;
+		}
+
+		const timestep = baseTimestep * simulationSpeed;
 		let timeRemaining = timestep;
 
 		// Loop untuk handle multiple collisions dalam satu frame
@@ -493,6 +504,22 @@
 				disabled={isRunning}
 				class="p-2 border border-gray/50 rounded bg-background text-gray disabled:bg-gray6 disabled:cursor-not-allowed"
 			/>
+		</div>
+
+		<div class="flex flex-col min-w-[150px]">
+			<label for="speed" class="font-semibold mb-1 text-gray">Kecepatan Simulasi:</label>
+			<select
+				id="speed"
+				bind:value={simulationSpeed}
+				disabled={isRunning}
+				class="p-2 border border-gray/50 rounded bg-background text-gray disabled:bg-gray6 disabled:cursor-not-allowed"
+			>
+				<option value={0.25}>0.25x (Lambat)</option>
+				<option value={0.5}>0.5x</option>
+				<option value={1}>1x (Normal)</option>
+				<option value={2}>2x (Cepat)</option>
+				<option value={4}>4x (Sangat Cepat)</option>
+			</select>
 		</div>
 
 		<div class="flex gap-2 items-end">
