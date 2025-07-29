@@ -97,25 +97,22 @@
 	function animate() {
 		if (!isRunning) return;
 
-		// Update positions
-		block1.x += block1.vx;
-		block2.x += block2.vx;
+		// Smaller timestep for better precision
+		const timestep = 0.5;
 
-		// Check for collision between blocks
-		if (
-			block1.x + block1.width >= block2.x &&
-			block1.x <= block2.x + block2.width &&
-			((block1.vx > 0 && block2.vx < 0) ||
-				(block1.vx > block2.vx && block1.vx > 0) ||
-				(block2.vx < block1.vx && block2.vx < 0))
-		) {
+		// Update positions
+		block1.x += block1.vx * timestep;
+		block2.x += block2.vx * timestep;
+
+		// Check for collision between blocks (more precise detection)
+		if (block1.x + block1.width > block2.x && block1.x < block2.x + block2.width && !hasCollided) {
 			// Elastic collision calculation
 			const v1 = block1.vx;
 			const v2 = block2.vx;
 			const m1 = block1.mass;
 			const m2 = block2.mass;
 
-			// Conservation of momentum and energy
+			// Conservation of momentum and energy (perfect elastic collision)
 			const newV1 = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
 			const newV2 = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
 
@@ -129,18 +126,21 @@
 				block2.x += overlap / 2;
 			}
 
+			hasCollided = true;
 			collisionCount++;
+		} else if (block1.x + block1.width < block2.x || block1.x > block2.x + block2.width) {
+			hasCollided = false; // Reset collision flag when blocks are separated
 		}
 
-		// Boundary collision - hanya dinding kiri
+		// Boundary collision - hanya dinding kiri (elastic collision, no energy loss)
 		if (block1.x <= 0) {
 			block1.x = 0;
-			block1.vx = -block1.vx * 0.8; // Some energy loss
+			block1.vx = -block1.vx; // Perfect elastic collision, no energy loss
 			collisionCount++; // Hitung collision dengan dinding
 		}
 		if (block2.x <= 0) {
 			block2.x = 0;
-			block2.vx = -block2.vx * 0.8;
+			block2.vx = -block2.vx; // Perfect elastic collision, no energy loss
 			collisionCount++; // Hitung collision dengan dinding
 		}
 		// Dinding kanan dihilangkan - blok bisa keluar ke kanan
@@ -154,9 +154,8 @@
 	function drawScene() {
 		if (!ctx) return;
 
-		// Clear canvas dengan background yang lebih gelap
-		ctx.fillStyle = '#ffffff'; // gray6 dari app.css
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		// Clear canvas tanpa background, biarkan transparan
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		// Draw ground line dengan warna blue2
 		ctx.strokeStyle = '#284b63'; // blue2 dari app.css
@@ -170,7 +169,7 @@
 		ctx.strokeStyle = '#b2becd'; // gray dari app.css
 		ctx.lineWidth = 4;
 		ctx.beginPath();
-		ctx.moveTo(0, 200);
+		ctx.moveTo(0, 50);
 		ctx.lineTo(0, 300);
 		ctx.stroke();
 
@@ -187,44 +186,6 @@
 		ctx.textAlign = 'center';
 		ctx.fillText(`${block1.mass}kg`, block1.x + block1.width / 2, block1.y + block1.height / 2 + 4);
 		ctx.fillText(`${block2.mass}kg`, block2.x + block2.width / 2, block2.y + block2.height / 2 + 4);
-
-		// Draw velocity vectors
-		if (isRunning || Math.abs(block1.vx) > 0.1) {
-			drawVelocityVector(block1.x + block1.width / 2, block1.y - 10, block1.vx * 10, '#3b6ec1'); // blue
-		}
-		if (isRunning || Math.abs(block2.vx) > 0.1) {
-			drawVelocityVector(block2.x + block2.width / 2, block2.y - 10, block2.vx * 10, '#ef4444'); // red
-		}
-	}
-
-	function drawVelocityVector(x: number, y: number, vx: number, color: string) {
-		if (Math.abs(vx) < 1) return;
-
-		ctx.strokeStyle = color;
-		ctx.lineWidth = 3; // Lebih tebal agar lebih terlihat
-		ctx.beginPath();
-		ctx.moveTo(x, y);
-		ctx.lineTo(x + vx, y);
-		ctx.stroke();
-
-		// Arrow head dengan ukuran yang lebih besar
-		if (vx > 0) {
-			ctx.beginPath();
-			ctx.moveTo(x + vx, y);
-			ctx.lineTo(x + vx - 8, y - 4);
-			ctx.lineTo(x + vx - 8, y + 4);
-			ctx.closePath();
-			ctx.fillStyle = color;
-			ctx.fill();
-		} else if (vx < 0) {
-			ctx.beginPath();
-			ctx.moveTo(x + vx, y);
-			ctx.lineTo(x + vx + 8, y - 4);
-			ctx.lineTo(x + vx + 8, y + 4);
-			ctx.closePath();
-			ctx.fillStyle = color;
-			ctx.fill();
-		}
 	}
 
 	// Update block properties when inputs change
@@ -343,11 +304,11 @@
 		</p>
 		<p class="m-0 text-sm">
 			<strong class="text-white">Kecepatan Blok Kiri:</strong>
-			<span class="text-green">{block1?.vx.toFixed(2) || 0} m/s</span>
+			<span class="text-blue">{block1?.vx.toFixed(2) || 0} m/s</span>
 		</p>
 		<p class="m-0 text-sm">
 			<strong class="text-white">Kecepatan Blok Kanan:</strong>
-			<span class="text-green">{block2?.vx.toFixed(2) || 0} m/s</span>
+			<span class="text-red">{block2?.vx.toFixed(2) || 0} m/s</span>
 		</p>
 	</div>
 
@@ -355,7 +316,7 @@
 		bind:this={canvas}
 		width="600"
 		height="400"
-		class="w-full max-w-[600px] h-[400px] rounded-lg block mx-auto mb-8"
+		class="w-full max-w-[600px] h-[400px] rounded-lg block mx-auto mb-8 bg-transparent"
 	></canvas>
 </div>
 
